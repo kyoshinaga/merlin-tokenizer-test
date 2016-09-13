@@ -7,9 +7,9 @@ end
 function Tokenizer()
   dict = IdDict(map(UTF8String, ["UNKNOWN", " ","\n"]))
   T = Float32
-  embed = Embedding(T, 10000, 10)
-  conv = Conv(T, (10,7),(1,70),paddims=(0,3))
-  ls = Linear(T, 70, 4)
+  embed = Embedding(T, 100000, 10)
+  conv = Conv(T, (10,9),(1,100),paddims=(0,4))
+  ls = Linear(T, 100, 4)
   g = @graph begin
     chars = identity(:chars)
     x = Var(reshape(chars, 1, length(chars)))

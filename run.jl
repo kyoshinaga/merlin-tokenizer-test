@@ -1,4 +1,4 @@
-include("testMerlin/testJukaiNLP.jl")
+include("src/testJukaiNLP.jl")
 using testJukaiNLP
 
 #doc = readconll("corpus/mini-mini-training-set.conll.org",[2,11])
