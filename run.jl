@@ -1,8 +1,30 @@
 include("src/testJukaiNLP.jl")
 using testJukaiNLP
 
-#doc = readconll("corpus/mini-mini-training-set.conll.org",[2,11])
 engdoc = readconll("corpus/mini-training-set.conll",[2,11])
-jpnTrainDoc = readknp("corpus/950101.KNP.org")
-jpnTestDoc = readknp("corpus/950103.KNP")
+
+jpnTrainDoc = []
+jpnTestDoc = []
+
+push!(jpnTrainDoc,readknp("corpus/950101.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950103.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950104.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950105.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950106.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950107.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950108.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950109.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950110.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950111.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950112.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950113.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950114.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950115.KNP"))
+push!(jpnTrainDoc,readknp("corpus/950116.KNP"))
+push!(jpnTestDoc,readknp("corpus/950117.KNP"))
+
+jpnTrainDoc = flattenDoc(jpnTrainDoc)
+jpnTestDoc = flattenDoc(jpnTestDoc)
+
 t = Tokenizer()
+#tcuda = TokenizerCuda()

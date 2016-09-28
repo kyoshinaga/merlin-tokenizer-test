@@ -1,4 +1,4 @@
-export encode, convJukai
+export encode, convJukai, flatten, flattenDoc
 
 function encode(t::Tokenizer, doc::Vector)
   unk, space, lf = t.dict["UNKNOWN"], t.dict[" "], t.dict["\n"]
@@ -39,26 +39,47 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
   push!(test_x, chars2)
   push!(test_y, tags2)
 
-  opt = SGD(0.00001, momentum=0.9)
+  opt = SGD(0.000001, momentum=0.9)
 
   for epoch = 1:nepoch
     println("epoch : $(epoch)")
-    loss = fit(t.model, crossentropy, opt, train_x, train_y)
+    #loss = fit(t.model, crossentropy, opt, train_x, train_y)
+    loss = fit(train_x, train_y, t.model, crossentropy, opt, progress=true)
     println("loss : $(loss)")
+
+    train_z = map(train_x) do x
+        argmax(t.model(x).data, 1)
+    end
 
     test_z = map(test_x) do x
       argmax(t.model(x).data, 1)
     end
 
-    acc = accuracy(flatten(test_y), flatten(test_z))
+    train_correct, train_total = accuracy(flatten(train_y), flatten(train_z))
+    correct, total = accuracy(flatten(test_y), flatten(test_z))
 
-    println("test acc.: $(acc)")
+    println("Train\n")
+    println("Gold : $(train_total), Correct: $(train_correct)")
+    println("test acc.: $(train_correct / train_total)")
+    println("")
+
+    println("Test\n")
+    println("Gold : $(total), Correct: $(correct)")
+    println("test acc.: $(correct / total)")
     println("")
   end
 end
 
 function flatten(data::Vector)
   res = Int[]
+  for x in data
+    append!(res, x)
+  end
+  res
+end
+
+function flattenDoc(data::Vector)
+  res = []
   for x in data
     append!(res, x)
   end
@@ -73,5 +94,5 @@ function accuracy(golds:: Vector{Int}, preds::Vector{Int})
     golds[i] == preds[i] && (correct += 1)
     total += 1
   end
-  correct / total
+  correct , total
 end

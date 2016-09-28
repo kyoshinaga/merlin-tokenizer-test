@@ -46,3 +46,9 @@ function Base.push!(d::IdDict, key)
   end
   id
 end
+
+function h5convert(f::IdDict)
+    h5dict(IdDict, "key2id"=>f.key2id,
+           "id2key"=>f.id2key, 
+           "id2count"=>f.id2count)
+end

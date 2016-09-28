@@ -1,11 +1,11 @@
-type Tokenizer
+type Tokenizer <: Functor
   dict::IdDict
   tagset::Tagset
   model
 end
 
 function Tokenizer()
-  dict = IdDict(map(UTF8String, ["UNKNOWN", " ","\n"]))
+  dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
   T = Float32
   embed = Embedding(T, 100000, 10)
   conv = Conv(T, (10,9),(1,100),paddims=(0,4))
@@ -24,6 +24,40 @@ function Tokenizer()
   Tokenizer(dict, IOE(), g)
 end
 
+function TokenizerCuda()
+  dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
+  T = Float32
+  embed = Embedding(T, 100000, 10)
+  conv = Conv(T, (10,9),(1,100),paddims=(0,4))
+  ls = Linear(T, 100, 4)
+  g = @graph begin
+    chars = identity(:chars)
+    x = Var(reshape(chars, 1, length(chars)))
+    x = embed(x)
+    x = conv(x)
+    x = reshape(x, sizeVar(x, 2), sizeVar(x, 3))
+    x = transpose(x)
+    x = VarToCuArray(x)
+    x = relu(x)
+    x = ls(x)
+    x = CuArrayToVar(x)
+    x
+  end
+  Tokenizer(dict, IOE(), g)
+end
+
+function VarToCuArray(x:: Var)
+  y = x
+  y.data = CuArray(x.data)
+  y
+end
+
+function CuArrayToVar(x:: Var)
+  y = x
+  y.data = Array(x.data)
+  y
+end
+
 function sizeVar(x:: Var, dim:: Int)
   size(x.data, dim)
 end
@@ -39,3 +73,8 @@ function (t::Tokenizer)(chars::Vector{Char})
 end
 
 (t::Tokenizer)(str:: String) = t(Vector{Char}(str))
+
+function h5convert(f::Tokenizer)
+    h5dict(Tokenizer, "tags"=>f.tagset, "iddict"=>f.dict)
+    # model
+end

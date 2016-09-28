@@ -32,3 +32,7 @@ function encode(tagset::IOE, ranges::Vector{UnitRange{Int}})
   end
   tags
 end
+
+function h5convert(f::IOE)
+    h5dict(IOE, "I"=>f.I, "O"=>f.O, "E"=>f.E)
+end
