@@ -1,6 +1,11 @@
 include("src/testJukaiNLP.jl")
 using testJukaiNLP
 
+using Merlin: Graph, GraphNode, Embedding
+using HDF5
+
+import Merlin: h5save, h5writedict, h5dict, h5convert
+
 engdoc = readconll("corpus/mini-training-set.conll",[2,11])
 
 jpnTrainDoc = []
@@ -28,3 +33,5 @@ jpnTestDoc = flattenDoc(jpnTestDoc)
 
 t = Tokenizer()
 #tcuda = TokenizerCuda()
+
+h5save("./tokenizer.h5",t)

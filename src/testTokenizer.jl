@@ -75,6 +75,6 @@ end
 (t::Tokenizer)(str:: String) = t(Vector{Char}(str))
 
 function h5convert(f::Tokenizer)
-    h5dict(Tokenizer, "tags"=>f.tagset, "iddict"=>f.dict)
-    # model
+    h5dict(Tokenizer, "tags"=>f.tagset, "iddict"=>f.dict, "model"=>f.model)
+    # h5dict(Tokenizer, "tags"=>f.tagset, "iddict"=>f.dict)
 end
