@@ -1,5 +1,5 @@
 export IdDict
-export load
+export load, h5convert
 
 type IdDict{T}
   key2id::Dict{T,Int}
@@ -47,8 +47,16 @@ function Base.push!(d::IdDict, key)
   id
 end
 
-function h5convert(f::IdDict)
-    h5dict(IdDict, "key2id"=>f.key2id,
+function h5convert{T}(f::IdDict{T})
+    h5dict(IdDict{T}, "key2id"=>f.key2id,
            "id2key"=>f.id2key, 
            "id2count"=>f.id2count)
+end
+
+function h5loadId!(data)
+    iddict = IdDict()
+    iddict.id2count = data["id2count"]
+    iddict.key2id = data["key2id"]
+    iddict.id2key = data["id2key"]
+    iddict
 end

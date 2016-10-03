@@ -1,4 +1,4 @@
-export encode, convJukai, flatten, flattenDoc
+export encode, convJukai, flatten, flattenDoc, train
 
 function encode(t::Tokenizer, doc::Vector)
   unk, space, lf = t.dict["UNKNOWN"], t.dict[" "], t.dict["\n"]
@@ -41,7 +41,12 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
 
   opt = SGD(0.000001, momentum=0.9)
 
+  outf = open("./trainProgress.tsv","w")
+
+  write(outf,"epoch\ttrain gold\ttrain correct\ttrain acc.\ttest gold\ttest correct\ttest acc.\n")
+
   for epoch = 1:nepoch
+    println("================")
     println("epoch : $(epoch)")
     #loss = fit(t.model, crossentropy, opt, train_x, train_y)
     loss = fit(train_x, train_y, t.model, crossentropy, opt, progress=true)
@@ -58,16 +63,22 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
     train_correct, train_total = accuracy(flatten(train_y), flatten(train_z))
     correct, total = accuracy(flatten(test_y), flatten(test_z))
 
-    println("Train\n")
-    println("Gold : $(train_total), Correct: $(train_correct)")
-    println("test acc.: $(train_correct / train_total)")
+    println("Train")
+    println("\tGold : $(train_total), Correct: $(train_correct)")
+    println("\ttest acc.: $(train_correct / train_total)")
+    println("Test")
+    println("\tGold : $(total), Correct: $(correct)")
+    println("\ttest acc.: $(correct / total)")
     println("")
 
-    println("Test\n")
-    println("Gold : $(total), Correct: $(correct)")
-    println("test acc.: $(correct / total)")
-    println("")
+    # file output
+    write(outf, "$(epoch)\t$(train_total)\t$(train_correct)\t$(train_correct/train_total)\t$(total)\t$(correct)\t$(correct/total)\n")
+
+    epoch % 100 == 0 && flush(outf)
+
   end
+
+  close(outf)
 end
 
 function flatten(data::Vector)

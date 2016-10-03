@@ -1,6 +1,6 @@
 abstract Tagset
 
-export encode
+export encode, decode, h5convert, h5load, IOE
 
 immutable IOE <: Tagset
   I::Int
@@ -36,3 +36,5 @@ end
 function h5convert(f::IOE)
     h5dict(IOE, "I"=>f.I, "O"=>f.O, "E"=>f.E)
 end
+
+h5loadTag!(data) = IOE(data["I"],data["O"],data["E"]) 
