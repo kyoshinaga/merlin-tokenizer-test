@@ -27,29 +27,33 @@ function readknp(path)
   newflag = false
   index = 0
   for line in lines
-    if startswith(line, comment)
-      continue
-    end
-    index += 1
-    line = chomp(line)
-    if line == "EOS"
-      length(sent) > 0 && push!(doc, sent)
-      sent = []
-      newflag = true
-    else
-      items = split(line, ' ')
-      if index == 1
-        items = [items[1], '_']
-      elseif newflag
-        items = [items[1], 'N']
-        newflag = false
-      elseif items[4] == "特殊"
-        items = [items[1], 'S']
-      else
-        items = [items[1], '_']
+      if startswith(line, comment)
+          continue
       end
-      push!(sent, items)
-    end
+      index += 1
+      line = chomp(line)
+      if line == "EOS"
+          length(sent) > 0 && push!(doc, sent)
+          sent = []
+          newflag = true
+      else
+          items = split(line, ' ')
+          if index == 1
+              items = [items[1], '_']
+          elseif newflag
+              items = [items[1], 'N']
+              newflag = false
+          elseif items[4] == "特殊"
+              #if items[1] == "、"
+              #    items = [items[1], '_']
+              #else
+                  items = [items[1], 'S']
+              #end
+          else
+              items = [items[1], '_']
+          end
+          push!(sent, items)
+      end
   end
   length(sent) > 0 && push!(doc, sent)
   doc

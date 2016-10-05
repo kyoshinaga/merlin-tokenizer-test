@@ -40,4 +40,4 @@ t = Tokenizer()
 
 @time @CPUtime train(t, 2000, jpnTrainDoc, jpnTestDoc)
 
-h5save("./tokenizer.h5",t)
+h5save("./tokenizer-camma-as-char.h5",t)
