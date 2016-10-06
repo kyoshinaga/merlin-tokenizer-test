@@ -8,8 +8,6 @@ using CPUTime
 
 import Merlin: h5save, h5writedict, h5dict, h5convert
 
-# engdoc = readconll("corpus/mini-training-set.conll",[2,11])
-
 jpnTrainDoc = []
 jpnTestDoc = []
 
@@ -34,10 +32,3 @@ jpnTrainDoc = flattenDoc(jpnTrainDoc)
 jpnTestDoc = flattenDoc(jpnTestDoc)
 
 t = Tokenizer()
-
-#tAuto = TokenizerAutoEncode()
-#tcuda = TokenizerCuda()
-
-@time @CPUtime train(t, 2000, jpnTrainDoc, jpnTestDoc)
-
-h5save("./tokenizer_20161006.h5",t)

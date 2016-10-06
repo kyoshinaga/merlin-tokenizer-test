@@ -9,9 +9,11 @@ function encode(t::Tokenizer, doc::Vector)
     for (word, tag) in sent
       for c in tag
         c == '_' && continue
-        if c == 'S' # Space
-          push!(chars, space)
-        elseif c == 'N' # Newline
+        c == 'S' && continue
+        # if c == 'S' # Space
+          # push!(chars, space)
+        #elseif c == 'N' # Newline
+        if c == 'N'
           push!(chars, lf)
         end
         pos += 1
@@ -19,7 +21,7 @@ function encode(t::Tokenizer, doc::Vector)
       for c in word
         push!(chars, push!(t.dict, string(c)))
       end
-      push!(ranges, pos:pos+length(word) - 1)
+      tag == '_' && push!(ranges, pos:pos+length(word) - 1)
       pos += length(word)
     end
   end
@@ -28,20 +30,20 @@ end
 
 function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
   chars, ranges = encode(t, trainData)
-  tags = encode(t.tagset, ranges)
+  tags = encode(t.tagset, ranges, length(chars))
   train_x, train_y = [], []
   push!(train_x, chars)
   push!(train_y, tags)
 
   chars2, ranges2 = encode(t, testData)
-  tags2 = encode(t.tagset, ranges2)
+  tags2 = encode(t.tagset, ranges2, length(chars2))
   test_x, test_y = [], []
   push!(test_x, chars2)
   push!(test_y, tags2)
 
   opt = SGD(0.000001, momentum=0.9)
 
-  outf = open("./trainProgress.tsv","w")
+  outf = open("./trainProgress_20161006_add_1000.tsv","w")
 
   write(outf,"epoch\ttrain gold\ttrain correct\ttrain acc.\ttest gold\ttest correct\ttest acc.\n")
 

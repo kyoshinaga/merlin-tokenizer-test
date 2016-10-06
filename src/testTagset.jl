@@ -24,8 +24,9 @@ function decode(tagset::IOE, tags::Vector{Int})
   ranges
 end
 
-function encode(tagset::IOE, ranges::Vector{UnitRange{Int}})
-  tags = fill(tagset.O, last(ranges[end]))
+function encode(tagset::IOE, ranges::Vector{UnitRange{Int}}, length::Int)
+  # tags = fill(tagset.O, last(ranges[end]))
+  tags = fill(tagset.O, length)
   for r in ranges
     tags[r] = tagset.I
     tags[last(r)] = tagset.E
