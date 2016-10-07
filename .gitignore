@@ -6,3 +6,6 @@
 *.jld
 deps/deps.jl
 corpus/
+archive/
+nohup.*
+*.tsv

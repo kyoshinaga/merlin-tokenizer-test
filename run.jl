@@ -38,6 +38,6 @@ t = Tokenizer()
 #tAuto = TokenizerAutoEncode()
 #tcuda = TokenizerCuda()
 
-@time @CPUtime train(t, 2000, jpnTrainDoc, jpnTestDoc)
+@time @CPUtime train(t, 10000, jpnTrainDoc, jpnTestDoc)
 
-h5save("./tokenizer_20161006.h5",t)
+h5save("./tokenizer_20161007.h5",t)

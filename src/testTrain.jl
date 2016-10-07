@@ -43,7 +43,7 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
 
   opt = SGD(0.000001, momentum=0.9)
 
-  outf = open("./trainProgress_20161006_add_1000.tsv","w")
+  outf = open("./trainProgress_20161007.tsv","w")
 
   write(outf,"epoch\ttrain gold\ttrain correct\ttrain acc.\ttest gold\ttest correct\ttest acc.\n")
 
