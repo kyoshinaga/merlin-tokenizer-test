@@ -11,7 +11,9 @@ function Tokenizer()
   T = Float32
   embed = Embedding(T, 100000, 10)
   conv = Conv(T, (10,9),(1,100),paddims=(0,4))
+  # conv = Conv(T, (10,9),(1,128),paddims=(0,4))
   ls = Linear(T, 100, 4)
+  # ls = Linear(T, 128, 4)
   g = @graph begin
     chars = identity(:chars)
     x = Var(reshape(chars, 1, length(chars)))

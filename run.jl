@@ -40,4 +40,4 @@ t = Tokenizer()
 
 @time @CPUtime train(t, 10000, jpnTrainDoc, jpnTestDoc)
 
-h5save("./tokenizer_20161007.h5",t)
+h5save("./tokenizer_20161007_ch128.h5",t)
