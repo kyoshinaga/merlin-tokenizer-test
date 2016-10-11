@@ -15,13 +15,13 @@ function encode(t::Tokenizer, doc::Vector)
         #elseif c == 'N' # Newline
         if c == 'N'
           push!(chars, lf)
-            pos += 1
+          pos += 1
         end
       end
       for c in word
         push!(chars, push!(t.dict, string(c)))
       end
-      tag != 'S' && push!(ranges, pos:pos+length(word) - 1)
+      tag != "S" && push!(ranges, pos:pos+length(word) - 1)
       pos += length(word)
     end
   end

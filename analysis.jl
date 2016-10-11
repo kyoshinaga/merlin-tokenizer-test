@@ -54,7 +54,8 @@ for sent in jpnTestDoc
 
     correct, total = accuracy(test_y, test_z)
 
-    strVec = Vector{Char}(join(map(r -> r[1], sent), ""))
+    # strVec = Vector{Char}(join(map(r -> r[1], sent), ""))
+    strVec = Vector{Char}(replace(join(map(r -> t.dict.id2key[r], test_x), ""),"\n","n"))
 
     if correct != total
         write(outf, "$(sentId)\n")

@@ -28,7 +28,9 @@ push!(jpnTrainDoc,readknp("corpus/950115.KNP"))
 push!(jpnTrainDoc,readknp("corpus/950116.KNP"))
 push!(jpnTrainDoc,readknp("corpus/950117.KNP"))
 
+push!(jpnTrainDoc, readBCCWJ("corpus/PB10_00047.xml"))
+
 jpnTrainDoc = flattenDoc(jpnTrainDoc)
 jpnTestDoc = flattenDoc(jpnTestDoc)
 
-t = Tokenizer()
+t = Tokenizer("BCCWJ_test")

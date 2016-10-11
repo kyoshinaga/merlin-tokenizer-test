@@ -1,4 +1,6 @@
-export readconll,readknp
+using LightXML
+importall LightXML
+export readconll,readknp, readBCCWJ
 
 function readconll(path, columns=Int[])
   doc = []
@@ -57,4 +59,36 @@ function readknp(path)
   end
   length(sent) > 0 && push!(doc, sent)
   doc
+end
+
+function readBCCWJ(path)
+    xdoc = parse_file(path)
+    xroot = LightXML.root(xdoc)
+    doc = []
+    flattenSUW!(xroot, doc)
+    doc
+end
+
+function flattenSUW!{T<:AbstractXMLNode}(r::T, v::Vector)
+    if name(r) != "SUW"
+        for c in child_nodes(r)
+            if name(c) == "sentence"
+                sent = []
+                flattenSUW!(c, sent)
+                sent[1][2] = "N"
+                push!(v, sent)
+            else
+                flattenSUW!(c, v)
+            end
+        end
+    else
+        elem = XMLElement(r)
+        text = content(elem)
+        atr = (attribute(elem, "wType") == "記号" ? "S" : "_")
+        push!(v, [text, atr])
+    end
+end
+
+function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector)
+
 end
