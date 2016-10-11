@@ -55,8 +55,8 @@ function h5loadTokenizer!(data::Dict)
 
         T = Float32
         embed = Embedding(T, 100000, 10)
-        conv = Conv(T, (10,9),(1,100),paddims=(0,4))
-        ls = Linear(T, 100, 4)
+        conv = Conv(T, (10,9),(1,128),paddims=(0,4))
+        ls = Linear(T, 128, 4)
 
         for (k,v) in model
             typeName = v["1"]["#TYPE"]
@@ -83,9 +83,9 @@ function h5loadTokenizer!(data::Dict)
           x
         end
 
-        t = Tokenizer(iddict, tagset, g)
+        t = Tokenizer("", iddict, tagset, g)
     else
-        t = Tokenizer()
+        t = Tokenizer("")
     end
     t
 end

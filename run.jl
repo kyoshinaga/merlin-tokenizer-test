@@ -33,11 +33,13 @@ push!(jpnTrainDoc,readknp("corpus/950117.KNP"))
 jpnTrainDoc = flattenDoc(jpnTrainDoc)
 jpnTestDoc = flattenDoc(jpnTestDoc)
 
-t = Tokenizer()
+prefix = "tokenizer_20161011"
+
+t = Tokenizer(string("./data/trainProgress",prefix,".tsv"))
 
 #tAuto = TokenizerAutoEncode()
 #tcuda = TokenizerCuda()
 
-@time @CPUtime train(t, 10000, jpnTrainDoc, jpnTestDoc)
+@time @CPUtime train(t, 100, jpnTrainDoc, jpnTestDoc)
 
-h5save("./tokenizer_20161007_ch128.h5",t)
+h5save(string("./model/", prefix, ".h5"),t)

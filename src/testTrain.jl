@@ -8,20 +8,20 @@ function encode(t::Tokenizer, doc::Vector)
   for sent in doc
     for (word, tag) in sent
       for c in tag
-        c == '_' && continue
-        c == 'S' && continue
+        # c == '_' && continue
+        # c == 'S' && continue
         # if c == 'S' # Space
           # push!(chars, space)
         #elseif c == 'N' # Newline
         if c == 'N'
           push!(chars, lf)
+            pos += 1
         end
-        pos += 1
       end
       for c in word
         push!(chars, push!(t.dict, string(c)))
       end
-      tag == '_' && push!(ranges, pos:pos+length(word) - 1)
+      tag != 'S' && push!(ranges, pos:pos+length(word) - 1)
       pos += length(word)
     end
   end
@@ -43,9 +43,9 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
 
   opt = SGD(0.000001, momentum=0.9)
 
-  outf = open("./trainProgress_20161007_ch128.tsv","w")
+  outf = open(t.filename,"w")
 
-  write(outf,"epoch\ttrain gold\ttrain correct\ttrain acc.\ttest gold\ttest correct\ttest acc.\n")
+  write(outf,"epoch\ttrain gold\ttrain correct\ttrain acc.\ttest gold\ttest correct\ttest acc.\tloss\n")
 
   for epoch = 1:nepoch
     println("================")
@@ -74,7 +74,7 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
     println("")
 
     # file output
-    write(outf, "$(epoch)\t$(train_total)\t$(train_correct)\t$(train_correct/train_total)\t$(total)\t$(correct)\t$(correct/total)\n")
+    write(outf, "$(epoch)\t$(train_total)\t$(train_correct)\t$(train_correct/train_total)\t$(total)\t$(correct)\t$(correct/total)\t$(loss)\n")
 
     epoch % 100 == 0 && flush(outf)
 
