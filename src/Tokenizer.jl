@@ -13,7 +13,7 @@ function Tokenizer(filename::String)
   embed = Embedding(T, 100000, 10)
   conv = Conv(T, (10,9),(1,128),paddims=(0,4))
   # conv = Conv(T, (10,9),(1,128),paddims=(0,4))
-  ls = Linear(T, 128, 4)
+  ls = Linear(T, 128, 3)
   # ls = Linear(T, 128, 4)
   g = @graph begin
     chars = identity(:chars)
