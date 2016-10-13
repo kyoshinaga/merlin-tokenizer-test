@@ -41,4 +41,10 @@ end
 
 doc = flattenDoc(doc)
 
+numOfData = length(doc)
+numOfTrainData = Int(floor(0.9 * numOfData)
+pickItemList = randperl(numOfData)
+jpnTrainDoc = copy(doc[pickItemList[1:numOfTrainData]])
+jpnTestDoc = copy(doc[pickItemList[(numOfTrainData+1):numOfData]])
+
 # t = Tokenizer("BCCWJ_test")
