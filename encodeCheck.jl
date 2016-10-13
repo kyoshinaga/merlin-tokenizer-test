@@ -33,6 +33,11 @@ prefix = "./corpus/bccwj/"
 fileList = readstring(`ls $(prefix)`)
 fileList = split(chomp(fileList),'\n')
 
+map(fileList) do f
+	println(string(f))
+	push!(doc, readBCCWJ(string(prefix,f)))
+end
+
 doc = flattenDoc(doc)
 
 # t = Tokenizer("BCCWJ_test")
