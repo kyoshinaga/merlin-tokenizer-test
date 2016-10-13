@@ -7,21 +7,14 @@ function encode(t::Tokenizer, doc::Vector)
   pos = 1
   for sent in doc
     for (word, tag) in sent
-      for c in tag
-        # c == '_' && continue
-        # c == 'S' && continue
-        # if c == 'S' # Space
-          # push!(chars, space)
-        #elseif c == 'N' # Newline
-        if c == 'N'
-          push!(chars, lf)
-          pos += 1
-        end
+      if endswith(tag,'N')
+        push!(chars, lf)
+        pos += 1
       end
       for c in word
         push!(chars, push!(t.dict, string(c)))
       end
-      tag != 'S' && push!(ranges, pos:pos+length(word) - 1)
+      startswith(tag,'S') || push!(ranges, pos:pos+length(word) - 1)
       pos += length(word)
     end
   end
