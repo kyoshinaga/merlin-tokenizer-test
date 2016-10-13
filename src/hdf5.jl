@@ -45,7 +45,7 @@ end
 
 h5loadTokenizer(filename::String) = h5loadTokenizer!(h5read(filename, "Merlin"))
 
-function h5loadTokenizer!(data::Dict)
+function h5loadTokenizer!(data::Dict, filename::String)
     if haskey(data,"#TYPE") && data["#TYPE"] == "testJukaiNLP.Tokenizer"
         delete!(data,"#TYPE")
         tagset = h5loadTag!(data["tagset"])
@@ -86,9 +86,9 @@ function h5loadTokenizer!(data::Dict)
           x
         end
 
-        t = Tokenizer("", iddict, tagset, g)
+        t = Tokenizer(filename, iddict, tagset, g)
     else
-        t = Tokenizer("")
+        t = Tokenizer(filename)
     end
     t
 end
