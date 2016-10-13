@@ -41,13 +41,19 @@ end
 
 doc = flattenDoc(doc)
 
-prefix = "tokenizer_20161012_output_3ch"
+numOfData = length(doc)
+numOfTrainData = Int(floor(0.9 * numOfData))
+pickItemList = randperm(numOfData)
+jpnTrainDoc = copy(doc[pickItemList[1:numOfTrainData]])
+jpnTestDoc = copy(doc[pickItemList[(numOfTrainData+1):numOfData]])
+
+prefix = "tokenizer_20161013_output_3ch"
 
 t = Tokenizer(string("./data/trainProgress_",prefix,".tsv"))
 
 #tAuto = TokenizerAutoEncode()
 #tcuda = TokenizerCuda()
 
-@time @CPUtime train(t, 1, jpnTrainDoc, jpnTestDoc)
+@time @CPUtime train(t, 10, jpnTrainDoc, jpnTestDoc)
 
 h5save(string("./model/", prefix, ".h5"),t)
