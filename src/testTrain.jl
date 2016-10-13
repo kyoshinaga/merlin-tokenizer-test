@@ -34,7 +34,7 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
   push!(test_x, chars2)
   push!(test_y, tags2)
 
-  opt = SGD(0.000001, momentum=0.9)
+  opt = SGD(0.0000001, momentum=0.9)
 
   outf = open(t.filename,"w")
 
