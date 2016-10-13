@@ -33,11 +33,11 @@ prefix = "./corpus/bccwj/"
 fileList = readstring(`ls $(prefix)`)
 fileList = split(chomp(fileList),'\n')
 numList = length(fileList)
-index = 0
+doneList = []
 
 map(fileList) do f
-	index += 1
-	println(string(f,",$(index):$(numList)"))
+	push!(doneList, f)
+	println(string(f,",$(length(doneList)):$(numList)"))
 	push!(doc, readBCCWJ(string(prefix,f)))
 end
 
