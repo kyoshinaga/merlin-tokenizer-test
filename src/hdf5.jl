@@ -54,8 +54,6 @@ function h5loadTokenizer!(data::Dict)
         delete!(model, "#TYPE")
 
         T = Float32
-        conv = Conv(T, (16,7),(1,64),paddims=(0,3))
-        ls = Linear(T, 64, 3)
 
 		nodeDict = Dict{String, Merlin.Functor}()
 
@@ -67,9 +65,11 @@ function h5loadTokenizer!(data::Dict)
             end
             if startswith(typeName,"Merlin.Conv")
                 conv = h5load!(v["1"])
+				nodeDict["conv"] = conv
             end
             if typeName == "Merlin.Linear"
                 ls = h5load!(v["1"])
+				nodeDict["ls"] = ls
             end
         end
 
@@ -78,11 +78,11 @@ function h5loadTokenizer!(data::Dict)
           x = Var(reshape(chars, 1, length(chars)))
           #x = embed(x)
           x = nodeDict["embed"](x)
-          x = conv(x)
+          x = nodeDict["conv"](x)
           x = reshape(x, size(x, 2), size(x, 3))
           x = transpose(x)
           x = relu(x)
-          x = ls(x)
+          x = nodeDict["ls"](x)
           x
         end
 
