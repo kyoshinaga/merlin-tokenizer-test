@@ -68,7 +68,7 @@ function flattenSUW!{T<:AbstractXMLNode}(r::T, v::Vector)
             if name(c) == "sentence"
                 sent = []
                 flattenSUW!(c, sent)
-                sent[1][2] = string(sent[1][2],"N")
+                length(sent) > 0 && (sent[1][2] = string(sent[1][2],"N"))
                 push!(v, sent)
             else
                 flattenSUW!(c, v)
