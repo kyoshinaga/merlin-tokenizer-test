@@ -25,7 +25,7 @@ push!(doc,readknp("corpus/950113.KNP"))
 push!(doc,readknp("corpus/950114.KNP"))
 push!(doc,readknp("corpus/950115.KNP"))
 push!(doc,readknp("corpus/950116.KNP"))
-push!(doc,readknp("corpus/950117.KNP"))
+# push!(doc,readknp("corpus/950117.KNP"))
 
 prefix = "./corpus/bccwj/"
 fileList = readstring(`ls $(prefix)`)
