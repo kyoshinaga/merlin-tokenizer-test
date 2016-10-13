@@ -44,6 +44,7 @@ function readknp(path)
 		  tag = (items[4] != "特殊" ? "_" : "S")
           if index != 1 && newflag
 			  tag = string(tag, "N")
+			  newflag = false
 		  end
 		  word = [items[1], tag]
           push!(sent, word)
