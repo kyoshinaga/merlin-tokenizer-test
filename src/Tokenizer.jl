@@ -10,8 +10,8 @@ end
 function Tokenizer(filename::String)
   dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
   T = Float32
-  embed = Embedding(T, 100000, 10)
-  conv = Conv(T, (10,9),(1,128),paddims=(0,4))
+  embed = Embedding(T, 100000, 16)
+  conv = Conv(T, (16,9),(1,128),paddims=(0,4))
   # conv = Conv(T, (10,9),(1,128),paddims=(0,4))
   ls = Linear(T, 128, 3)
   # ls = Linear(T, 128, 4)
