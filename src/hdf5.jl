@@ -3,7 +3,7 @@ export h5convert, h5dict, h5load, h5load!, h5loadTokenizer
 
 h5convert{T}(x::Array{T}) = x
 
-function h5convert(x::Tuple) 
+function h5convert(x::Tuple)
     dict = h5dict(Tuple)
     for i = 1:length(x)
         dict[string(i)] = h5convert(x[i])
@@ -22,7 +22,7 @@ function h5load!{N}(::Type{Merlin.Conv{N}}, data)
     paddims = h5load!(data["paddims"])
     stride = h5load!(data["stride"])
     w = h5load!(data["w"])
-    
+
     # Number of dimension
     N = length(filterdims)
     T = typeof(w.data).parameters[1]
@@ -54,14 +54,16 @@ function h5loadTokenizer!(data::Dict)
         delete!(model, "#TYPE")
 
         T = Float32
-        embed = Embedding(T, 100000, 10)
-        conv = Conv(T, (10,9),(1,128),paddims=(0,4))
-        ls = Linear(T, 128, 4)
+        conv = Conv(T, (16,7),(1,64),paddims=(0,3))
+        ls = Linear(T, 64, 3)
+
+		nodeDict = Dict{String, Merlin.Functor}()
 
         for (k,v) in model
             typeName = v["1"]["#TYPE"]
             if typeName == "Merlin.Embedding"
                 embed = h5load!(v["1"])
+				nodeDict["embed"] = embed
             end
             if startswith(typeName,"Merlin.Conv")
                 conv = h5load!(v["1"])
@@ -74,7 +76,8 @@ function h5loadTokenizer!(data::Dict)
         g = @graph begin
           chars = identity(:chars)
           x = Var(reshape(chars, 1, length(chars)))
-          x = embed(x)
+          #x = embed(x)
+          x = nodeDict["embed"](x)
           x = conv(x)
           x = reshape(x, size(x, 2), size(x, 3))
           x = transpose(x)
