@@ -62,7 +62,7 @@ tags = encode(t.tagset, ranges, length(chars))
 println("correct")
 println(transpose(correct))
 println("char")
-println(transpose(chars))
+println(transpose(tags))
 
 failed = 0
 for p in zip(tags, correct)
