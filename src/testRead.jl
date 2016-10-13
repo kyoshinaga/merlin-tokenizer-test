@@ -34,27 +34,19 @@ function readknp(path)
       end
       index += 1
       line = chomp(line)
+      tag = ""
       if line == "EOS"
           length(sent) > 0 && push!(doc, sent)
           sent = []
           newflag = true
       else
           items = split(line, ' ')
-          if index == 1
-              items = [items[1], '_']
-          elseif newflag
-              items = [items[1], 'N']
-              newflag = false
-          elseif items[4] == "特殊"
-              #if items[1] == "、"
-              #    items = [items[1], '_']
-              #else
-                  items = [items[1], 'S']
-              #end
-          else
-              items = [items[1], '_']
-          end
-          push!(sent, items)
+		  tag = (items[4] != "特殊" ? "_" : "S")
+          if index != 1 && newflag
+			  tag = string(tag, "N")
+		  end
+		  word = [items[1], tag]
+          push!(sent, word)
       end
   end
   length(sent) > 0 && push!(doc, sent)
