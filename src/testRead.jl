@@ -57,9 +57,11 @@ end
 function readBCCWJ(path)
     xdoc = parse_file(path)
     xroot = LightXML.root(xdoc)
-    doc = []
-    flattenSUW!(xroot, doc)
-    doc
+    suwDoc = []
+    flattenSUW!(xroot, suwDoc)
+    luwDoc = []
+    flattenLUW!(xroot, luwDoc)
+    suwDoc, luwDoc
 end
 
 function flattenSUW!{T<:AbstractXMLNode}(r::T, v::Vector)
@@ -75,13 +77,45 @@ function flattenSUW!{T<:AbstractXMLNode}(r::T, v::Vector)
             end
         end
     else
-        elem = XMLElement(r)
-        text = content(elem)
-        atr = (attribute(elem, "wType") == "記号" ? "S" : "_")
+        text = getText(r)
+        atr = (getAttribute(r, "wType") == "記号" ? "S" : "_")
         push!(v, [text, atr])
     end
 end
 
-function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector)
+"""
+	flattenLUW!(r, v; lowPos)
 
+Adding LUW tag to BCCWJ corpus.
+Tag definition (Ref. K. Uchimoto et al., 2007):
+	Ba : Beginning of word. POS information agrees.
+	Ia : Middle or End. POS information agrees.
+	B  : Beginning of word. POS information does not agree.
+	I  : Middle or End. POS information does not agree.
+"""
+function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector; luwPos::String="")
+    if name(r) != "SUW"
+        for c in child_nodes(r)
+            if name(c) == "sentence"
+                sent = []
+                flattenLUW!(c, sent)
+                length(sent) > 0 && (sent[1][2] = string(sent[1][2],"N"))
+                push!(v, sent)
+            elseif name(c) == "LUW"
+				pos = getAttribute(r, "l_pos")
+                flattenLUW!(c, v, luwPos=string(pos))
+			else
+				flattenLUW!(c,v,luwPos=luwPos)
+            end
+        end
+    else
+        text = getText(r)
+        pos = getAttribute(r, "pos")
+		atr = (luwPos == pos ? "a" : "")
+        push!(v, [text, atr])
+    end
 end
+
+getAttribute{T:<AbstractXMLNode}(n::T, str::String) = attribute(XMLElement(r), str)
+
+getText{T:<AbstractXMLNode}(n::T) = content(XMLElement(r))
