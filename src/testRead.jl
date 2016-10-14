@@ -103,7 +103,6 @@ function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector, luwPos::String)
                 push!(v, sent)
             elseif name(c) == "LUW"
                 pos = getPos(c, true)
-                println(string("LUW pos : ", pos))
                 flattenLUW!(c, v, string(pos))
             else
                 flattenLUW!(c, v, luwPos)
@@ -112,9 +111,7 @@ function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector, luwPos::String)
     else
         text = getText(r)
         pos = getPos(r, false)
-        println(luwPos)
-        println(pos)
-	atr = (luwPos == pos ? "a" : "")
+		atr = (luwPos == pos ? "a" : "")
         push!(v, [text, atr])
     end
 end
@@ -129,8 +126,8 @@ Return refined pos information.
 """
 function getPos{T<:AbstractXMLNode}(n::T, luwFlag::Bool)
     pos = getAttribute(n, (luwFlag ? "l_pos" : "pos"))
-    pos = split(pos,"-")
-    pos = (length(pos) > 2) ? join(pos[1:2],"-") : pos
+    posList = split(pos,"-")
+    pos = (length(posList) > 1) ? join(posList[1:2],"-") : pos
     pos
 end
 
