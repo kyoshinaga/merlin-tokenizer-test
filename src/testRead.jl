@@ -116,6 +116,6 @@ function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector; luwPos::String="")
     end
 end
 
-getAttribute{T:<AbstractXMLNode}(n::T, str::String) = attribute(XMLElement(r), str)
+getAttribute{T<:AbstractXMLNode}(n::T, str::String) = attribute(XMLElement(r), str)
 
-getText{T:<AbstractXMLNode}(n::T) = content(XMLElement(r))
+getText{T<:AbstractXMLNode}(n::T) = content(XMLElement(r))
