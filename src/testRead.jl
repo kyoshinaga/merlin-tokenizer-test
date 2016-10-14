@@ -60,7 +60,7 @@ function readBCCWJ(path)
     suwDoc = []
     flattenSUW!(xroot, suwDoc)
     luwDoc = []
-    flattenLUW!(xroot, luwDoc)
+    flattenLUW!(xroot, luwDoc, "")
     suwDoc, luwDoc
 end
 
@@ -93,27 +93,45 @@ Tag definition (Ref. K. Uchimoto et al., 2007):
 	B  : Beginning of word. POS information does not agree.
 	I  : Middle or End. POS information does not agree.
 """
-function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector; luwPos::String="")
+function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector, luwPos::String)
     if name(r) != "SUW"
         for c in child_nodes(r)
             if name(c) == "sentence"
                 sent = []
-                flattenLUW!(c, sent)
+                flattenLUW!(c, sent, "")
                 length(sent) > 0 && (sent[1][2] = string(sent[1][2],"N"))
                 push!(v, sent)
             elseif name(c) == "LUW"
-				pos = getAttribute(r, "l_pos")
-                flattenLUW!(c, v, luwPos=string(pos))
-			else
-				flattenLUW!(c, v,luwPos=luwPos)
+                pos = getPos(c, true)
+                println(string("LUW pos : ", pos))
+                flattenLUW!(c, v, string(pos))
+            else
+                flattenLUW!(c, v, luwPos)
             end
         end
     else
         text = getText(r)
-        pos = getAttribute(r, "pos")
-		atr = (luwPos == pos ? "a" : "")
+        pos = getPos(r, false)
+        println(luwPos)
+        println(pos)
+	atr = (luwPos == pos ? "a" : "")
         push!(v, [text, atr])
     end
+end
+
+"""
+    getPos(n, luwFlag)
+
+Return refined pos information.
+
+* n: Node
+* luwFlag: Flag of node type. True => LUW, False = SUW.
+"""
+function getPos{T<:AbstractXMLNode}(n::T, luwFlag::Bool)
+    pos = getAttribute(n, (luwFlag ? "l_pos" : "pos"))
+    pos = split(pos,"-")
+    pos = (length(pos) > 2) ? join(pos[1:2],"-") : pos
+    pos
 end
 
 getAttribute{T<:AbstractXMLNode}(n::T, str::String) = attribute(XMLElement(n), str)

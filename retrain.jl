@@ -55,6 +55,6 @@ string("./data/trainProgress_",prefix,".tsv"))
 #tAuto = TokenizerAutoEncode()
 #tcuda = TokenizerCuda()
 
-@time @CPUtime train(t, 1000, jpnTrainDoc, jpnTestDoc)
+@time @CPUtime train(t, 4000, jpnTrainDoc, jpnTestDoc)
 
 h5save(string("./model/", prefix, ".h5"),t)

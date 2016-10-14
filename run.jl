@@ -47,13 +47,13 @@ pickItemList = randperm(numOfData)
 jpnTrainDoc = copy(doc[pickItemList[1:numOfTrainData]])
 jpnTestDoc = copy(doc[pickItemList[(numOfTrainData+1):numOfData]])
 
-prefix = "tokenizer_20161013_output_3ch"
+prefix = "tokenizer_20161013_output_3ch_1000epoch"
 
 t = Tokenizer(string("./data/trainProgress_",prefix,".tsv"))
 
 #tAuto = TokenizerAutoEncode()
 #tcuda = TokenizerCuda()
 
-@time @CPUtime train(t, 10, jpnTrainDoc, jpnTestDoc)
+@time @CPUtime train(t, 1000, jpnTrainDoc, jpnTestDoc)
 
 h5save(string("./model/", prefix, ".h5"),t)
