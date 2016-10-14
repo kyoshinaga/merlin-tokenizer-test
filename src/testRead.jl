@@ -105,7 +105,7 @@ function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector; luwPos::String="")
 				pos = getAttribute(r, "l_pos")
                 flattenLUW!(c, v, luwPos=string(pos))
 			else
-				flattenLUW!(c,v,luwPos=luwPos)
+				flattenLUW!(c, v,luwPos=luwPos)
             end
         end
     else
@@ -116,6 +116,6 @@ function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector; luwPos::String="")
     end
 end
 
-getAttribute{T<:AbstractXMLNode}(n::T, str::String) = attribute(XMLElement(r), str)
+getAttribute{T<:AbstractXMLNode}(n::T, str::String) = attribute(XMLElement(n), str)
 
-getText{T<:AbstractXMLNode}(n::T) = content(XMLElement(r))
+getText{T<:AbstractXMLNode}(n::T) = content(XMLElement(n))
