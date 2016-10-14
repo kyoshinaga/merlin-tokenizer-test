@@ -99,10 +99,9 @@ function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector, luwPos::String)
             if name(c) == "sentence"
                 sent = []
                 flattenLUW!(c, sent, "")
-                length(sent) > 0 && (sent[1][2] = string(sent[1][2],"N"))
                 push!(v, sent)
             elseif name(c) == "LUW"
-                pos = getPos(c, true)
+                pos = getAttribute(c, "l_pos")
                 flattenLUW!(c, v, string(pos))
             else
                 flattenLUW!(c, v, luwPos)
@@ -110,25 +109,10 @@ function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector, luwPos::String)
         end
     else
         text = getText(r)
-        pos = getPos(r, false)
+		pos = getAttribute(r, "pos")
 		atr = (luwPos == pos ? "a" : "")
         push!(v, [text, atr])
     end
-end
-
-"""
-    getPos(n, luwFlag)
-
-Return refined pos information.
-
-* n: Node
-* luwFlag: Flag of node type. True => LUW, False = SUW.
-"""
-function getPos{T<:AbstractXMLNode}(n::T, luwFlag::Bool)
-    pos = getAttribute(n, (luwFlag ? "l_pos" : "pos"))
-    posList = split(pos,"-")
-    pos = (length(posList) > 1) ? join(posList[1:2],"-") : pos
-    pos
 end
 
 getAttribute{T<:AbstractXMLNode}(n::T, str::String) = attribute(XMLElement(n), str)
