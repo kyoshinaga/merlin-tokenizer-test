@@ -43,7 +43,7 @@ end
 
 # Loading
 
-h5loadTokenizer(filename::String) = h5loadTokenizer!(h5read(filename, "Merlin"))
+h5loadTokenizer(filename::String, outputFile::String) = h5loadTokenizer!(h5read(filename, "Merlin"), outputFile)
 
 function h5loadTokenizer!(data::Dict, filename::String)
     if haskey(data,"#TYPE") && data["#TYPE"] == "testJukaiNLP.Tokenizer"
