@@ -8,36 +8,53 @@ using CPUTime
 
 import Merlin: h5save, h5writedict, h5dict, h5convert
 
-# engdoc = readconll("corpus/mini-training-set.conll",[2,11])
+doc = []
 
-jpnTrainDoc = []
-jpnTestDoc = []
+push!(doc,readknp("corpus/950101.KNP"))
+push!(doc,readknp("corpus/950103.KNP"))
+push!(doc,readknp("corpus/950104.KNP"))
+push!(doc,readknp("corpus/950105.KNP"))
+push!(doc,readknp("corpus/950106.KNP"))
+push!(doc,readknp("corpus/950107.KNP"))
+push!(doc,readknp("corpus/950108.KNP"))
+push!(doc,readknp("corpus/950109.KNP"))
+push!(doc,readknp("corpus/950110.KNP"))
+push!(doc,readknp("corpus/950111.KNP"))
+push!(doc,readknp("corpus/950112.KNP"))
+push!(doc,readknp("corpus/950113.KNP"))
+push!(doc,readknp("corpus/950114.KNP"))
+push!(doc,readknp("corpus/950115.KNP"))
+push!(doc,readknp("corpus/950116.KNP"))
+push!(doc,readknp("corpus/950117.KNP"))
 
-push!(jpnTrainDoc,readknp("corpus/950101.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950103.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950104.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950105.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950106.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950107.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950108.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950109.KNP"))
-push!(jpnTestDoc,readknp("corpus/950110.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950111.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950112.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950113.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950114.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950115.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950116.KNP"))
-push!(jpnTrainDoc,readknp("corpus/950117.KNP"))
+prefix = "./corpus/bccwj/"
+fileList = readstring(`ls $(prefix)`)
+fileList = split(chomp(fileList),'\n')
+numList = length(fileList)
+doneList = []
 
-jpnTrainDoc = flattenDoc(jpnTrainDoc)
-jpnTestDoc = flattenDoc(jpnTestDoc)
+map(fileList) do f
+	push!(doneList, f)
+	println(string(f,",$(length(doneList)):$(numList)"))
+	push!(doc, readBCCWJ(string(prefix,f)))
+end
 
-t = h5loadTokenizer("./tokenizer_20161006.h5")
+doc = flattenDoc(doc)
+
+numOfData = length(doc)
+numOfTrainData = Int(floor(0.9 * numOfData))
+pickItemList = randperm(numOfData)
+jpnTrainDoc = copy(doc[pickItemList[1:numOfTrainData]])
+jpnTestDoc = copy(doc[pickItemList[(numOfTrainData+1):numOfData]])
+
+prefix = "tokenizer_20161014_retrain"
+
+t = h5loadTokenizer("model/tokenizer_20161013_output_3ch_1000epoch.h5",
+string("./data/trainProgress_",prefix,".tsv"))
 
 #tAuto = TokenizerAutoEncode()
 #tcuda = TokenizerCuda()
 
 @time @CPUtime train(t, 1000, jpnTrainDoc, jpnTestDoc)
 
-h5save("./tokenizer_20161006_add_1000.h5",t)
+h5save(string("./model/", prefix, ".h5"),t)
