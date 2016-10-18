@@ -49,7 +49,7 @@ end
 
 function h5convert{T}(f::IdDict{T})
     h5dict(IdDict{T}, "key2id"=>f.key2id,
-           "id2key"=>f.id2key, 
+           "id2key"=>f.id2key,
            "id2count"=>f.id2count)
 end
 
@@ -57,6 +57,15 @@ function h5loadId!(data)
     iddict = IdDict()
     iddict.id2count = data["id2count"]
     iddict.key2id = data["key2id"]
-    iddict.id2key = data["id2key"]
+	id2key = data["id2key"]
+	buff = String[]
+	if id2key == Dict{String,Any}
+		for i = 1:(length(id2key) - 1)
+			push!(buff, id2key[string(i)])
+		end
+	else
+		buff = id2key
+	end
+    iddict.id2key = buff
     iddict
 end
