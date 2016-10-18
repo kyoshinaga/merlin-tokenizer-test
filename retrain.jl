@@ -27,17 +27,17 @@ push!(doc,readknp("corpus/950115.KNP"))
 push!(doc,readknp("corpus/950116.KNP"))
 push!(doc,readknp("corpus/950117.KNP"))
 
-prefix = "./corpus/bccwj/"
-fileList = readstring(`ls $(prefix)`)
-fileList = split(chomp(fileList),'\n')
-numList = length(fileList)
-doneList = []
+#prefix = "./corpus/bccwj/"
+#fileList = readstring(`ls $(prefix)`)
+#fileList = split(chomp(fileList),'\n')
+#numList = length(fileList)
+#doneList = []
 
-map(fileList) do f
-	push!(doneList, f)
-	println(string(f,",$(length(doneList)):$(numList)"))
-	push!(doc, readBCCWJ(string(prefix,f)))
-end
+# map(fileList) do f
+# 	push!(doneList, f)
+# 	println(string(f,",$(length(doneList)):$(numList)"))
+# 	push!(doc, readBCCWJ(string(prefix,f)))
+# end
 
 doc = flattenDoc(doc)
 
@@ -47,14 +47,14 @@ pickItemList = randperm(numOfData)
 jpnTrainDoc = copy(doc[pickItemList[1:numOfTrainData]])
 jpnTestDoc = copy(doc[pickItemList[(numOfTrainData+1):numOfData]])
 
-prefix = "tokenizer_20161014_retrain"
+prefix = "tokenizer_20161018_retrain"
 
-t = h5loadTokenizer("model/tokenizer_20161013_output_3ch_1000epoch.h5",
+t = h5loadTokenizer("model/tokenizer_20161017_3ch.h5",
 string("./data/trainProgress_",prefix,".tsv"))
 
 #tAuto = TokenizerAutoEncode()
 #tcuda = TokenizerCuda()
 
-@time @CPUtime train(t, 4000, jpnTrainDoc, jpnTestDoc)
+@time @CPUtime train(t, 10000, jpnTrainDoc, jpnTestDoc)
 
 h5save(string("./model/", prefix, ".h5"),t)
