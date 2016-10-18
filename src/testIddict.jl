@@ -59,7 +59,7 @@ function h5loadId!(data)
     iddict.key2id = data["key2id"]
 	id2key = data["id2key"]
 	buff = String[]
-	if id2key == Dict{String,Any}
+	if typeof(id2key) == Dict{String,Any}
 		for i = 1:(length(id2key) - 1)
 			push!(buff, id2key[string(i)])
 		end
