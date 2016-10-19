@@ -2,9 +2,9 @@ include("./src/testJukaiNLP.jl")
 
 function readKNPSentence(path::String)
   doc = []
-  sen = []
   lines = open(readlines,path)
   comment = Char['*','#']
+  sen = []
 
   for line in lines
     if startswith(line, comment)
@@ -13,6 +13,7 @@ function readKNPSentence(path::String)
     line = chomp(line)
     if line == "EOS"
 		push!(doc,sen)
+  		sen = []
         continue
     end
     items = split(line, ' ')
