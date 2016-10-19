@@ -36,7 +36,8 @@ doneList = []
 map(fileList) do f
 	push!(doneList, f)
 	println(string(f,",$(length(doneList)):$(numList)"))
-	push!(doc, readBCCWJ(string(prefix,f)))
+	suw, luw = readBCCWJ(string(prefix, f))
+	push!(doc, suw)
 end
 
 doc = flattenDoc(doc)
