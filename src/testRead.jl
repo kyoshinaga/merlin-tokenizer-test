@@ -54,7 +54,7 @@ function readknp(path)
   doc
 end
 
-function readknp(str::Array{String})
+function readMecabJuman(str::Array{String})
   doc = []
   sent = []
   comment = Char['*','#']
@@ -73,7 +73,7 @@ function readknp(str::Array{String})
           newflag = true
       else
           items = split(line, ' ')
-		  tag = (items[4] != "特殊" ? "_" : "S")
+		  tag = (items[2] != "特殊" ? "_" : "S")
           if index != 1 && newflag
 			  tag = string(tag, "N")
 			  newflag = false
