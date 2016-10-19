@@ -33,7 +33,7 @@ t = h5loadTokenizer("./model/tokenizer_knp.h5","test.tsv")
 
 # Gold
 charsGold, rangesGold = encode(t, docGold)
-tagsGold = encode(t.tagset, ragesGold, length(charsGold))
+tagsGold = encode(t.tagset, rangesGold, length(charsGold))
 
 # model
 tagsTest = t.model(charsGold)
