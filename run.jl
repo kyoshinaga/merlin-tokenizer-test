@@ -10,22 +10,22 @@ import Merlin: h5save, h5writedict, h5dict, h5convert
 
 doc = []
 
-push!(doc,readknp("corpus/950101.KNP"))
-push!(doc,readknp("corpus/950103.KNP"))
-push!(doc,readknp("corpus/950104.KNP"))
-push!(doc,readknp("corpus/950105.KNP"))
-push!(doc,readknp("corpus/950106.KNP"))
-push!(doc,readknp("corpus/950107.KNP"))
-push!(doc,readknp("corpus/950108.KNP"))
-push!(doc,readknp("corpus/950109.KNP"))
-push!(doc,readknp("corpus/950110.KNP"))
-push!(doc,readknp("corpus/950111.KNP"))
-push!(doc,readknp("corpus/950112.KNP"))
-push!(doc,readknp("corpus/950113.KNP"))
-push!(doc,readknp("corpus/950114.KNP"))
-push!(doc,readknp("corpus/950115.KNP"))
-push!(doc,readknp("corpus/950116.KNP"))
-push!(doc,readknp("corpus/950117.KNP"))
+#push!(doc,readknp("corpus/950101.KNP"))
+#push!(doc,readknp("corpus/950103.KNP"))
+#push!(doc,readknp("corpus/950104.KNP"))
+#push!(doc,readknp("corpus/950105.KNP"))
+#push!(doc,readknp("corpus/950106.KNP"))
+#push!(doc,readknp("corpus/950107.KNP"))
+#push!(doc,readknp("corpus/950108.KNP"))
+#push!(doc,readknp("corpus/950109.KNP"))
+#push!(doc,readknp("corpus/950110.KNP"))
+#push!(doc,readknp("corpus/950111.KNP"))
+#push!(doc,readknp("corpus/950112.KNP"))
+#push!(doc,readknp("corpus/950113.KNP"))
+#push!(doc,readknp("corpus/950114.KNP"))
+#push!(doc,readknp("corpus/950115.KNP"))
+#push!(doc,readknp("corpus/950116.KNP"))
+#push!(doc,readknp("corpus/950117.KNP"))
 
 prefix = "./corpus/bccwj/"
 fileList = readstring(`ls $(prefix)`)
@@ -47,13 +47,13 @@ pickItemList = randperm(numOfData)
 jpnTrainDoc = copy(doc[pickItemList[1:numOfTrainData]])
 jpnTestDoc = copy(doc[pickItemList[(numOfTrainData+1):numOfData]])
 
-prefix = "tokenizer_20161013_output_3ch_1000epoch"
+prefix = "tokenizer_20161019_BCCWJ"
 
 t = Tokenizer(string("./data/trainProgress_",prefix,".tsv"))
 
 #tAuto = TokenizerAutoEncode()
 #tcuda = TokenizerCuda()
 
-@time @CPUtime train(t, 1000, jpnTrainDoc, jpnTestDoc)
+@time @CPUtime train(t, 100, jpnTrainDoc, jpnTestDoc)
 
 h5save(string("./model/", prefix, ".h5"),t)
