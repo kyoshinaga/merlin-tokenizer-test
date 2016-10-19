@@ -12,7 +12,7 @@ function readKNPSentence(path::String)
     end
     line = chomp(line)
     if line == "EOS"
-		push!(doc,sen)
+		push!(doc,join(sen))
   		sen = []
         continue
     end
