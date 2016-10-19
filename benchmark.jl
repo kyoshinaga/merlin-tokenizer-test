@@ -2,6 +2,7 @@ include("./src/testJukaiNLP.jl")
 
 function readKNPSentence(path::String)
   doc = []
+  sen = []
   lines = open(readlines,path)
   comment = Char['*','#']
 
@@ -11,15 +12,15 @@ function readKNPSentence(path::String)
     end
     line = chomp(line)
     if line == "EOS"
+		push!(doc,sen)
         continue
     end
     items = split(line, ' ')
     strVector = Vector{Char}(items[1])
-    append!(doc, strVector)
+    append!(sen, strVector)
   end
   doc
 end
 
-#doc = readKNPSentence("./corpus/950110.KNP")
+doc = readKNPSentence("./corpus/950110.KNP")
 #sen = join(doc)
-
