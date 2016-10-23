@@ -1,6 +1,6 @@
 using LightXML
 importall LightXML
-export readconll,readknp, readBCCWJ
+export readconll, readknp, readBCCWJ, readJuman
 
 function readconll(path, columns=Int[])
   doc = []
@@ -26,6 +26,39 @@ function readknp(path)
   sent = []
   lines = open(readlines,path)
   comment = Char['*','#']
+  newflag = false
+  index = 0
+  for line in lines
+      if startswith(line, comment)
+          continue
+      end
+      index += 1
+      line = chomp(line)
+      tag = ""
+      if line == "EOS"
+          length(sent) > 0 && push!(doc, sent)
+          sent = []
+          newflag = true
+      else
+          items = split(line, ' ')
+		  tag = (items[4] != "特殊" ? "_" : "S")
+          if index != 1 && newflag
+			  tag = string(tag, "N")
+			  newflag = false
+		  end
+		  word = [items[1], tag]
+          push!(sent, word)
+      end
+  end
+  length(sent) > 0 && push!(doc, sent)
+  doc
+end
+
+function readJuman(path)
+  doc = []
+  sent = []
+  lines = open(readlines,path)
+  comment = Char['*','#','@']
   newflag = false
   index = 0
   for line in lines
