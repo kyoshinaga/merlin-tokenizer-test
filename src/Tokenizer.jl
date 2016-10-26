@@ -111,3 +111,5 @@ function h5load!(::Type{Tokenizer}, data)
 
     Tokenizer(iddict, tagset, model)
 end
+
+Base.size(x:: Var, dims:: Int) = size(x.data, dims)
