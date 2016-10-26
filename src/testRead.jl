@@ -1,6 +1,24 @@
 using LightXML
 importall LightXML
-export readconll, readknp, readBCCWJ, readJuman
+export readconll, readknp, readBCCWJ, readJuman, readCorpus
+
+function readCorpus(path::String)
+    dict = h5read(path,"Merlin")
+    delete!(dict, "#TYPE")
+    doc = []
+
+    for i = 1:length(dict)
+        s = dict[string(i)]
+        sent = []
+        delete!(s, "#TYPE")
+        for j = 1:length(s)
+            push!(sent, s[string(j)])
+        end
+        push!(doc, sent)
+    end
+    doc
+end
+
 
 function readconll(path, columns=Int[])
   doc = []
