@@ -10,8 +10,8 @@ end
 function Tokenizer(filename::String)
   dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
   T = Float32
-  embed = Embedding(T, 10000, 8)
-  conv = Conv(T, (8,9),(1,128),paddims=(0,4))
+  embed = Embedding(T, 10000, 16)
+  conv = Conv(T, (16,11),(1,128),paddims=(0,5))
   ls = Linear(T, 128, 3)
   g = @graph begin
     chars = identity(:chars)
@@ -21,6 +21,7 @@ function Tokenizer(filename::String)
     x = reshape(x, size(x, 2), size(x, 3))
     x = transpose(x)
     x = relu(x)
+	x = dropout(x, 0.5, true)
     x = ls(x)
     x
   end

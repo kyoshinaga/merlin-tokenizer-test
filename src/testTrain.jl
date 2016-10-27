@@ -1,29 +1,37 @@
 export encode, convJukai, flatten, flattenDoc, train
 
 function encode(t::Tokenizer, doc::Vector)
-  unk, space, lf = t.dict["UNKNOWN"], t.dict[" "], t.dict["\n"]
-  chars = Int[]
-  ranges = UnitRange{Int}[]
-  pos = 1
-  for sent in doc
-    for (word, tag) in sent
-      if endswith(tag,'N')
-        push!(chars, lf)
-        pos += 1
-      end
-      for c in word
-        push!(chars, push!(t.dict, string(c)))
-      end
-      startswith(tag,'S') || push!(ranges, pos:pos+length(word) - 1)
-      pos += length(word)
-    end
-  end
-  chars, ranges
+	unk, space, lf = t.dict["UNKNOWN"], t.dict[" "], t.dict["\n"]
+	chars = []
+	ranges = []
+	pos = 1
+	for sent in doc
+		charVector = Int[]
+		rangeVector = UnitRange{Int}[]
+		for (word, tag) in sent
+			if endswith(tag,'N')
+				push!(charVector, lf)
+				pos += 1
+			end
+			for c in word
+				push!(charVector, push!(t.dict, string(c)))
+			end
+			startswith(tag,'S') || push!(rangeVector, pos:pos+length(word) - 1)
+			pos += length(word)
+		end
+		push!(chars, charVector)
+		push!(ranges, rangeVector)
+	end
+	chars, ranges
 end
 
 function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
   chars, ranges = encode(t, trainData)
-  tags = encode(t.tagset, ranges, length(chars))
+  # tags = encode(t.tagset, ranges, length(chars))
+  tags = []
+  map(zip(chars, ranges)) do x
+	  push!(tags, encode(t.tagset, x[1], length(x[2])))
+  end
   train_x, train_y = [], []
   push!(train_x, chars)
   push!(train_y, tags)

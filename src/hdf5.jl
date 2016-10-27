@@ -76,12 +76,12 @@ function h5loadTokenizer!(data::Dict, filename::String)
         g = @graph begin
           chars = identity(:chars)
           x = Var(reshape(chars, 1, length(chars)))
-          #x = embed(x)
           x = nodeDict["embed"](x)
           x = nodeDict["conv"](x)
           x = reshape(x, size(x, 2), size(x, 3))
           x = transpose(x)
           x = relu(x)
+		  x = dropout(x, 0.5, false)
           x = nodeDict["ls"](x)
           x
         end
