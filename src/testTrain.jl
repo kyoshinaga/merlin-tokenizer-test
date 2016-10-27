@@ -4,10 +4,10 @@ function encode(t::Tokenizer, doc::Vector)
 	unk, space, lf = t.dict["UNKNOWN"], t.dict[" "], t.dict["\n"]
 	chars = []
 	ranges = []
-	pos = 1
 	for sent in doc
 		charVector = Int[]
 		rangeVector = UnitRange{Int}[]
+		pos = 1
 		for (word, tag) in sent
 			if endswith(tag,'N')
 				push!(charVector, lf)
@@ -32,6 +32,7 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
   map(zip(chars, ranges)) do x
 	  push!(tags, encode(t.tagset, x[1], length(x[2])))
   end
+  
   train_x, train_y = [], []
   push!(train_x, chars)
   push!(train_y, tags)
