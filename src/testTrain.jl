@@ -44,7 +44,7 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
   map(zip(chars2, ranges2)) do x
 	  push!(tags2, encode(t.tagset, x[2], length(x[1])))
   end
-  test_x, test_y = chars, ranges2
+  test_x, test_y = chars2, ranges2
 
   opt = SGD(0.0000001, momentum=0.9)
 
