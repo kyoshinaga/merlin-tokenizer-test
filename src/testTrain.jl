@@ -99,6 +99,7 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
 		from = batchUnit * index
 		to = batchUnit * (index + 1)
 		to = (to > length(chars)) ? length(chars) : to
+		to = Int(to)
 		train_x, train_y = chars[from:to], tags[from:to]
 	end
 
