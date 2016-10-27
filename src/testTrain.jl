@@ -86,12 +86,12 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
     println("\tGold : $(train_total), Correct: $(train_correct)")
     println("\ttest acc.: $(train_correct / train_total)")
     println("Test")
-    println("\tGold : $(total), Correct: $(correct)")
-    println("\ttest acc.: $(correct / total)")
+    println("\tGold : $(test_total), Correct: $(test_correct)")
+    println("\ttest acc.: $(test_correct / test_total)")
     println("")
 
     # file output
-    write(outf, "$(epoch)\t$(train_total)\t$(train_correct)\t$(train_correct/train_total)\t$(total)\t$(correct)\t$(correct/total)\t$(loss)\n")
+    write(outf, "$(epoch)\t$(train_total)\t$(train_correct)\t$(train_correct/train_total)\t$(test_total)\t$(test_correct)\t$(test_correct/test_total)\t$(loss)\n")
 
 	if (epoch % (nepoch/10) == 0)
 		println("Get next batch")
