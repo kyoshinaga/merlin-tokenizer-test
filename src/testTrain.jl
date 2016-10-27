@@ -30,18 +30,21 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
   # tags = encode(t.tagset, ranges, length(chars))
   tags = []
   map(zip(chars, ranges)) do x
-	  push!(tags, encode(t.tagset, x[1], length(x[2])))
+	  push!(tags, encode(t.tagset, x[2], length(x[1])))
   end
-  
-  train_x, train_y = [], []
-  push!(train_x, chars)
-  push!(train_y, tags)
+
+  batchUnit = Int(ceil(length(chars)/10))
+  batchEpoch = 0
+
+  train_x, train_y = chars[1:batchUnit], tags[1:batchUnit]
 
   chars2, ranges2 = encode(t, testData)
-  tags2 = encode(t.tagset, ranges2, length(chars2))
-  test_x, test_y = [], []
-  push!(test_x, chars2)
-  push!(test_y, tags2)
+  #tags2 = encode(t.tagset, ranges2, length(chars2))
+  tags2 = []
+  map(zip(chars2, ranges2)) do x
+	  push!(tags2, encode(t.tagset, x[2], length(x[1])))
+  end
+  test_x, test_y = chars, ranges2
 
   opt = SGD(0.0000001, momentum=0.9)
 
@@ -64,8 +67,20 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
       argmax(t.model(x).data, 1)
     end
 
-    train_correct, train_total = accuracy(flatten(train_y), flatten(train_z))
-    correct, total = accuracy(flatten(test_y), flatten(test_z))
+    train_correct, train_total = 0, 0
+    test_correct, test_total = 0, 0
+
+	map(zip(train_y, train_z)) do x
+		correct, total = accuracy(x[1], x[2])
+		train_correct += correct
+		train_total += total
+	end
+
+	map(zip(test_y, test_z)) do x
+		correct, total = accuracy(x[1], x[2])
+		test_correct += correct
+		test_total += total
+	end
 
     println("Train")
     println("\tGold : $(train_total), Correct: $(train_correct)")
@@ -77,6 +92,15 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
 
     # file output
     write(outf, "$(epoch)\t$(train_total)\t$(train_correct)\t$(train_correct/train_total)\t$(total)\t$(correct)\t$(correct/total)\t$(loss)\n")
+
+	if (epoch % (nepoch/10) == 0)
+		println("Get next batch")
+		index = (epoch / (nepoch/10))
+		from = batchUnit * index
+		to = batchUnit * (index + 1)
+		to = (to > length(chars)) ? length(chars) : to
+		train_x, train_y = chars[from:to], tags[from:to]
+	end
 
     epoch % 100 == 0 && flush(outf)
 
