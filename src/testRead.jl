@@ -187,8 +187,8 @@ function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector, luwPos::String)
 				word = []
                 pos = getAttribute(c, "l_pos")
                 flattenLUW!(c, word, string(pos))
-				map(w -> w[2] = string("I",w[2]), word)
-				(length(word) > 1) && (word[1][2] = replace(word[1][2], "I", "B"))
+				word[1][2] = string("B",word[1][2])
+				(length(word) > 1) && (map(w -> replace(w[2], "I", "B"),word[2:end]))
 				map(x -> push!(v, x), word)
             else
                 flattenLUW!(c, v, luwPos)
