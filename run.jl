@@ -56,13 +56,13 @@ import Merlin: h5save, h5writedict, h5dict, h5convert
 
 jpnTrainDoc = readCorpus("./corpus/jpnTrainDoc.h5")
 jpnValidDoc = readCorpus("./corpus/jpnValidDoc.h5")
-jpnTestDoc = readCorpus("./corpus/jpnTestDoc.h5")
+#jpnTestDoc = readCorpus("./corpus/jpnTestDoc.h5")
 
 println("Train data:\t$(length(jpnTrainDoc))")
 println("Valid data:\t$(length(jpnValidDoc))")
-println("Test data:\t$(length(jpnTestDoc))")
+#println("Test data:\t$(length(jpnTestDoc))")
 
-prefix = "tokenizer_20161026_KNP_ver2"
+prefix = "tokenizer_20161028_KNP_ver2"
 
 t = Tokenizer(string("./data/",prefix,".tsv"))
 
