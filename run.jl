@@ -62,7 +62,7 @@ println("Train data:\t$(length(jpnTrainDoc))")
 println("Valid data:\t$(length(jpnValidDoc))")
 #println("Test data:\t$(length(jpnTestDoc))")
 
-prefix = "tokenizer_20161028_KNP_ver2"
+prefix = "tokenizer_20161028_KNP_ver1"
 
 t = Tokenizer(string("./data/",prefix,".tsv"))
 
