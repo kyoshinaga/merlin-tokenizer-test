@@ -36,10 +36,10 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
 #  batchUnit = Int(ceil(length(chars)/10))
 #  batchEpoch = 0
 
-  train_x = []
-  train_y = []
-  push!(train_x, flatten(chars))
-  push!(train_y, flatten(tags))
+  train_x = chars
+  train_y = tags
+  #push!(train_x, flatten(chars))
+  #push!(train_y, flatten(tags))
 
   chars2, ranges2 = encode(t, testData)
   #tags2 = encode(t.tagset, ranges2, length(chars2))

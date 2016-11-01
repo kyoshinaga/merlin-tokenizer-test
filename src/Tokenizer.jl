@@ -21,7 +21,7 @@ function Tokenizer(filename::String)
     x = reshape(x, size(x, 2), size(x, 3))
     x = transpose(x)
     x = relu(x)
-	x = dropout(x, 0.5, true)
+#	x = dropout(x, 0.5, true)
     x = ls(x)
     x
   end
