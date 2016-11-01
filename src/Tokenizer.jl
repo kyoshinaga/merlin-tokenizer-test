@@ -10,9 +10,14 @@ end
 function Tokenizer(prefix::String)
   dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
   T = Float32
-  embed = Embedding(T, 10000, 16)
-  conv = Conv(T, (16,11),(1,128),paddims=(0,5))
-  ls = Linear(T, 128, 3)
+  emboutCh = 16
+  convFilterWidth = 9
+  convOutCh = 64
+  convPadWidth = Int((convFilterWidth - 1)/2)
+  lsOutCh = 3
+  embed = Embedding(T, 10000, emboutCh)
+  conv = Conv(T, (emboutCh,convFilterWidth),(1,convOutCh),paddims=(0,convPadWidth))
+  ls = Linear(T, convOutCh, lsOutCh)
   g = @graph begin
     chars = identity(:chars)
     x = Var(reshape(chars, 1, length(chars)))
@@ -25,6 +30,16 @@ function Tokenizer(prefix::String)
     x = ls(x)
     x
   end
+  outf = open(string("./data/",prefix,"/NetworkConstruction.tsv"),"w")
+  write(outf, "Embediding: ($(length(embed.ws)),$(length(embed.ws[1].data)))\n")
+  write(outf, "Conv:\n")
+  write(outf, "\tfilterdims: $(conv.filterdims)\n")
+  write(outf, "\tch: ($(size(conv.w.data,3)),$(size(conv.w.data,4)))\n")
+  write(outf, "\tstride: $(conv.stride)\n")
+  write(outf, "\tpaddims: $(conv.paddims)\n")
+  write(outf, "Linear: ($(size(ls.w, 2)),$(size(ls.w, 1)))\n")
+  close(outf)
+
   Tokenizer(prefix, dict, IOE(), g)
 end
 

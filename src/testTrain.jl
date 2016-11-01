@@ -25,24 +25,24 @@ function encode(t::Tokenizer, doc::Vector)
 	chars, ranges
 end
 
-function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
+function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; batchFlag=false)
   chars, ranges = encode(t, trainData)
-  # tags = encode(t.tagset, ranges, length(chars))
   tags = []
   map(zip(chars, ranges)) do x
 	  push!(tags, encode(t.tagset, x[2], length(x[1])))
   end
 
-#  batchUnit = Int(ceil(length(chars)/10))
-#  batchEpoch = 0
-
-  train_x = chars
-  train_y = tags
-  #push!(train_x, flatten(chars))
-  #push!(train_y, flatten(tags))
+  if (batchFlag)
+    train_x = []
+    train_y = []
+    push!(train_x, flatten(chars))
+    push!(train_y, flatten(tags))
+  else
+    train_x = chars
+    train_y = tags
+  end
 
   chars2, ranges2 = encode(t, testData)
-  #tags2 = encode(t.tagset, ranges2, length(chars2))
   tags2 = []
   map(zip(chars2, ranges2)) do x
 	  push!(tags2, encode(t.tagset, x[2], length(x[1])))
@@ -58,7 +58,6 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
   for epoch = 1:nepoch
     println("================")
     println("epoch : $(epoch)")
-    #loss = fit(t.model, crossentropy, opt, train_x, train_y)
     loss = fit(train_x, train_y, t.model, crossentropy, opt, progress=true)
     println("loss : $(loss)")
 
@@ -96,22 +95,8 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
     # file output
     write(outf, "$(epoch)\t$(train_total)\t$(train_correct)\t$(train_correct/train_total)\t$(test_total)\t$(test_correct)\t$(test_correct/test_total)\t$(loss)\n")
 
-#	if (epoch % (nepoch/10) == 0)
-#		println("Get next batch")
-#		train_x = []
-#		train_y = []
-#		index = (epoch / (nepoch/10))
-#		from = batchUnit * index
-#		to = batchUnit * (index + 1)
-#		to = (to > length(chars)) ? length(chars) : to
-#		from = Int(from)
-#		to = Int(to)
-#  		push!(train_x, flatten(chars[from:to]))
-#  		push!(train_y, flatten(tags[from:to]))
-#	end
-
     epoch % 100 == 0 && flush(outf)
-	epoch % (nepoch/10) == 0 && h5save(string("./model/",t.prefix,"tokenizer_",string(epoch / (nepoch/10)),".h5"),t)
+	epoch % (nepoch/10) == 0 && h5save(string("./model/",t.prefix,"/tokenizer_",string(epoch),".h5"),t)
 
   end
 
