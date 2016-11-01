@@ -33,13 +33,13 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
 	  push!(tags, encode(t.tagset, x[2], length(x[1])))
   end
 
-  batchUnit = Int(ceil(length(chars)/10))
-  batchEpoch = 0
+#  batchUnit = Int(ceil(length(chars)/10))
+#  batchEpoch = 0
 
   train_x = []
   train_y = []
-  push!(train_x, flatten(chars[1:batchUnit]))
-  push!(train_y, flatten(tags[1:batchUnit]))
+  push!(train_x, flatten(chars))
+  push!(train_y, flatten(tags))
 
   chars2, ranges2 = encode(t, testData)
   #tags2 = encode(t.tagset, ranges2, length(chars2))
@@ -96,19 +96,19 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
     # file output
     write(outf, "$(epoch)\t$(train_total)\t$(train_correct)\t$(train_correct/train_total)\t$(test_total)\t$(test_correct)\t$(test_correct/test_total)\t$(loss)\n")
 
-	if (epoch % (nepoch/10) == 0)
-		println("Get next batch")
-		train_x = []
-		train_y = []
-		index = (epoch / (nepoch/10))
-		from = batchUnit * index
-		to = batchUnit * (index + 1)
-		to = (to > length(chars)) ? length(chars) : to
-		from = Int(from)
-		to = Int(to)
-  		push!(train_x, flatten(chars[from:to]))
-  		push!(train_y, flatten(tags[from:to]))
-	end
+#	if (epoch % (nepoch/10) == 0)
+#		println("Get next batch")
+#		train_x = []
+#		train_y = []
+#		index = (epoch / (nepoch/10))
+#		from = batchUnit * index
+#		to = batchUnit * (index + 1)
+#		to = (to > length(chars)) ? length(chars) : to
+#		from = Int(from)
+#		to = Int(to)
+#  		push!(train_x, flatten(chars[from:to]))
+#  		push!(train_y, flatten(tags[from:to]))
+#	end
 
     epoch % 100 == 0 && flush(outf)
 
