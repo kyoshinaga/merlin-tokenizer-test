@@ -1,13 +1,13 @@
 export Tokenizer, TokenizerAutoEncode, h5convert
 
 type Tokenizer <: Functor
-  filename::String
+  prefix::String
   dict::IdDict
   tagset::Tagset
   model
 end
 
-function Tokenizer(filename::String)
+function Tokenizer(prefix::String)
   dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
   T = Float32
   embed = Embedding(T, 10000, 16)
@@ -25,7 +25,7 @@ function Tokenizer(filename::String)
     x = ls(x)
     x
   end
-  Tokenizer(filename, dict, IOE(), g)
+  Tokenizer(prefix, dict, IOE(), g)
 end
 
 function TokenizerAutoEncode()

@@ -16,10 +16,13 @@ jpnValidDoc = readCorpus("./corpus/jpnValidDoc.h5")
 println("Valid data:\t$(length(jpnValidDoc))")
 #println("Test data:\t$(length(jpnTestDoc))")
 
-prefix = "tokenizer_20161101_KNP_ver1"
+prefix = "20161101"
 
-t = Tokenizer(string("./data/",prefix,".tsv"))
+run(`mkdir ./data/$(prefix)`)
+run(`mkdir ./model/$(prefix)`)
 
-@time @CPUtime train(t, 1, jpnValidDoc, jpnValidDoc)
+t = Tokenizer(prefix)
 
-h5save(string("./model/", prefix, ".h5"),t)
+@time @CPUtime train(t, 10, jpnValidDoc, jpnValidDoc)
+
+h5save(string("./model/", prefix, "/tokenizer_result.h5"),t)

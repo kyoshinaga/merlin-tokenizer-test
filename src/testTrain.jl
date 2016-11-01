@@ -51,7 +51,7 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
 
   opt = SGD(0.0000001, momentum=0.9)
 
-  outf = open(t.filename,"w")
+  outf = open(string("./data/",t.prefix,"/trainProgress.tsv"),"w")
 
   write(outf,"epoch\ttrain gold\ttrain correct\ttrain acc.\ttest gold\ttest correct\ttest acc.\tloss\n")
 
@@ -111,6 +111,7 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
 #	end
 
     epoch % 100 == 0 && flush(outf)
+	epoch % (nepoch/10) == 0 && h5save(string("./model/",t.prefix,"tokenizer_",string(epoch / (nepoch/10),".h5"),t)
 
   end
 
