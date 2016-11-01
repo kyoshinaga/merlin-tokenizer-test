@@ -111,7 +111,7 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector)
 #	end
 
     epoch % 100 == 0 && flush(outf)
-	epoch % (nepoch/10) == 0 && h5save(string("./model/",t.prefix,"tokenizer_",string(epoch / (nepoch/10),".h5"),t)
+	epoch % (nepoch/10) == 0 && h5save(string("./model/",t.prefix,"tokenizer_",string(epoch / (nepoch/10)),".h5"),t)
 
   end
 
