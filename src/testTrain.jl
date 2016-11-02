@@ -105,11 +105,11 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
 
     epoch % 100 == 0 && flush(outf)
 	epoch % (nepoch/10) == 0 && h5save(string("./model/",t.prefix,"/tokenizer_",string(epoch),".h5"),t)
-    if (epoch > eepoch * 0.2) && firstUpdatedFlag 
+    if (epoch > nepoch * 0.2) && firstUpdatedFlag 
         learningRate *= Float32(0.1)
         firstUpdatedFlag = false
     end
-    if epoch > eepoch * 0.6 && secondUpdatedFlag 
+    if epoch > nepoch * 0.6 && secondUpdatedFlag 
         learningRate *= Float32(0.1)
         secondUpdatedFlag = false
     end
