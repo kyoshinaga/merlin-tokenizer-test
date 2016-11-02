@@ -49,11 +49,19 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
   end
   test_x, test_y = chars2, tags2
 
-  opt = SGD(0.0000001, momentum=0.9)
+  learningRate = 0.00001
+  momentumRate = 0.9
+
+  opt = SGD(learningRate, momentum=momentumRate)
 
   outf = open(string("./data/",t.prefix,"/trainProgress.tsv"),"w")
 
+  write(outf,"learning rate:\t$(learningRate)\n")
+  write(outf,"momentum rate:\t$(momentumRate)\n")
   write(outf,"epoch\ttrain gold\ttrain correct\ttrain acc.\ttest gold\ttest correct\ttest acc.\tloss\n")
+
+  firstUpdatedFlag = true
+  secondUpdatedFlag = true
 
   for epoch = 1:nepoch
     println("================")
@@ -97,7 +105,14 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
 
     epoch % 100 == 0 && flush(outf)
 	epoch % (nepoch/10) == 0 && h5save(string("./model/",t.prefix,"/tokenizer_",string(epoch),".h5"),t)
-
+    if (epoch > eepoch * 0.2) && firstUpdatedFlag 
+        learningRate *= Float32(0.1)
+        firstUpdatedFlag = false
+    end
+    if epoch > eepoch * 0.6 && secondUpdatedFlag 
+        learningRate *= Float32(0.1)
+        secondUpdatedFlag = false
+    end
   end
 
   close(outf)

@@ -12,13 +12,13 @@ jpnValidDoc = readCorpus("./corpus/jpnValidDoc.h5")
 #println("Train data:\t($(length(jpnTrainDoc)))")
 println("Valid data:\t($(length(jpnValidDoc)))")
 
-prefix = "pettern2"
+prefix = "20161102/pettern1"
 
-success(`mkdir ./data/$(prefix)`)
-success(`mkdir ./model/$(prefix)`)
+success(`mkdir -p ./data/$(prefix)`)
+success(`mkdir -p ./model/$(prefix)`)
 
 t = Tokenizer(prefix)
 
-@time @CPUtime train(t, 10, jpnValidDoc, jpnValidDoc)
+@time @CPUtime train(t, 100, jpnValidDoc, jpnValidDoc)
 
 h5save(string("./model/",prefix,"/tokenizer_result.h5"),t)

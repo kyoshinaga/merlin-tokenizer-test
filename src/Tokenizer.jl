@@ -12,7 +12,7 @@ function Tokenizer(prefix::String)
   T = Float32
   emboutCh = 16
   convFilterWidth = 9
-  convOutCh = 64
+  convOutCh = 128
   convPadWidth = Int((convFilterWidth - 1)/2)
   lsOutCh = 3
   embed = Embedding(T, 10000, emboutCh)
