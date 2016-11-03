@@ -1,5 +1,7 @@
 export encode, convJukai, flatten, flattenDoc, train
 
+using Formatting
+
 function encode(t::Tokenizer, doc::Vector)
 	unk, space, lf = t.dict["UNKNOWN"], t.dict[" "], t.dict["\n"]
 	chars = []
@@ -25,7 +27,7 @@ function encode(t::Tokenizer, doc::Vector)
 	chars, ranges
 end
 
-function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; batchFlag=false)
+function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; batchFlag=false, dynamicRate=false)
   chars, ranges = encode(t, trainData)
   tags = []
   map(zip(chars, ranges)) do x
@@ -58,16 +60,18 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
 
   write(outf,"learning rate:\t$(learningRate)\n")
   write(outf,"momentum rate:\t$(momentumRate)\n")
-  write(outf,"epoch\ttrain gold\ttrain correct\ttrain acc.\ttest gold\ttest correct\ttest acc.\tloss\n")
+  write(outf,"epoch\ttrain gold\ttrain correct\ttrain acc.\ttest gold\ttest correct\ttest acc.\ttrain loss\tvalid loss\n")
 
   firstUpdatedFlag = true
   secondUpdatedFlag = true
 
+  fmt = "%1.5f"
+
   for epoch = 1:nepoch
     println("================")
     println("epoch : $(epoch)")
-    loss = fit(train_x, train_y, t.model, crossentropy, opt, progress=true)
-    println("loss : $(loss)")
+    trainLoss = fit(train_x, train_y, t.model, crossentropy, opt, progress=true)
+    println("train loss : $(trainLoss)")
 
     train_z = map(train_x) do x
         argmax(t.model(x).data, 1)
@@ -75,6 +79,13 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
 
     test_z = map(test_x) do x
       argmax(t.model(x).data, 1)
+    end
+
+    validLoss = 0
+    for data in zip(test_x,test_y)
+        z = t.model(data[1])
+        l = crossentropy(data[2], z)
+        validLoss += sum(l.data)
     end
 
     train_correct, train_total = 0, 0
@@ -92,27 +103,36 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
 		test_total += total
 	end
 
+    trainAcc = sprintf1(fmt, (train_correct / train_total))
+    validAcc = sprintf1(fmt, (test_correct / test_total))
+
     println("Train")
     println("\tGold : $(train_total), Correct: $(train_correct)")
-    println("\ttest acc.: $(train_correct / train_total)")
-    println("Test")
+    println("\ttest acc.: $(trainAcc)")
+    println("Valid")
     println("\tGold : $(test_total), Correct: $(test_correct)")
-    println("\ttest acc.: $(test_correct / test_total)")
+    println("\ttest acc.: $(validAcc)")
     println("")
 
     # file output
-    write(outf, "$(epoch)\t$(train_total)\t$(train_correct)\t$(train_correct/train_total)\t$(test_total)\t$(test_correct)\t$(test_correct/test_total)\t$(loss)\n")
+    write(outf, "$(epoch)\t$(train_total)\t$(train_correct)\t$(trainAcc)\t$(test_total)\t$(test_correct)\t$(validAcc)\t$(trainLoss)\t$(validLoss)\n")
 
-    epoch % 100 == 0 && flush(outf)
-	epoch % (nepoch/10) == 0 && h5save(string("./model/",t.prefix,"/tokenizer_",string(epoch),".h5"),t)
-    if (epoch > nepoch * 0.2) && firstUpdatedFlag 
-        learningRate *= Float32(0.1)
-        firstUpdatedFlag = false
+    if dynamicRate
+        if (epoch > nepoch * 0.2) && firstUpdatedFlag
+            learningRate *= Float32(0.1)
+            firstUpdatedFlag = false
+        end
+        if epoch > nepoch * 0.6 && secondUpdatedFlag
+            learningRate *= Float32(0.1)
+            secondUpdatedFlag = false
+        end
     end
-    if epoch > nepoch * 0.6 && secondUpdatedFlag 
-        learningRate *= Float32(0.1)
-        secondUpdatedFlag = false
+
+	if epoch % (nepoch/10) == 0 
+        h5save(string("./model/",t.prefix,"/tokenizer_",string(epoch),".h5"),t)
+        flush(outf)
     end
+
   end
 
   close(outf)
