@@ -106,7 +106,7 @@ function readJuman(path)
 end
 
 function readMecabJuman(str::Array{String})
-  doc = []
+  #doc = []
   sent = []
   comment = Char['*','#']
   newflag = false
@@ -119,9 +119,12 @@ function readMecabJuman(str::Array{String})
       line = chomp(line)
       tag = ""
       if line == "EOS"
-          length(sent) > 0 && push!(doc, sent)
-          sent = []
-          newflag = true
+          println("eos")
+          # length(sent) > 0 && push!(doc, sent)
+          # sent = []
+          # Bug of newline charactor
+          # This should be modify if i have extra time.
+          # newflag = true  
       else
           items = split(line, ' ')
 		  tag = (items[2] != "特殊" ? "_" : "S")
@@ -133,8 +136,9 @@ function readMecabJuman(str::Array{String})
           push!(sent, word)
       end
   end
-  length(sent) > 0 && push!(doc, sent)
-  doc
+  sent
+  #length(sent) > 0 && push!(doc, sent)
+  #doc
 end
 
 function readBCCWJ(path)

@@ -12,7 +12,7 @@ jpnValidDoc = readCorpus("./corpus/jpnValidDoc.h5")
 println("Train data:\t($(length(jpnTrainDoc)))")
 println("Valid data:\t($(length(jpnValidDoc)))")
 
-prefix = "test"
+prefix = "pettern8"
 
 success(`mkdir -p ./data/$(prefix)`)
 success(`mkdir -p ./model/$(prefix)`)
@@ -20,7 +20,7 @@ success(`mkdir -p ./model/$(prefix)`)
 t = Tokenizer(prefix)
 
 beginTime = time()
-@time @CPUtime train(t, 500, jpnTrainDoc, jpnValidDoc)
+@time @CPUtime train(t, 100, jpnTrainDoc, jpnValidDoc)
 endTime = time()
 
 outf = open("./data/$(prefix)/computeTime.txt","w")

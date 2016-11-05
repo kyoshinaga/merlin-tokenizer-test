@@ -10,8 +10,8 @@ end
 function Tokenizer(prefix::String)
   dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
   T = Float32
-  emboutCh = 16
-  convFilterWidth = 9
+  emboutCh = 12
+  convFilterWidth = 7
   convOutCh = 128
   convPadWidth = Int((convFilterWidth - 1)/2)
   lsOutCh = 3
