@@ -12,7 +12,7 @@ jpnValidDoc = readCorpus("./corpus/jpnValidDoc.h5")
 println("Train data:\t($(length(jpnTrainDoc)))")
 println("Valid data:\t($(length(jpnValidDoc)))")
 
-prefix = "pettern8"
+prefix = "pettern9"
 
 success(`mkdir -p ./data/$(prefix)`)
 success(`mkdir -p ./model/$(prefix)`)

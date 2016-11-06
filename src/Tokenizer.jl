@@ -10,9 +10,9 @@ end
 function Tokenizer(prefix::String)
   dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
   T = Float32
-  emboutCh = 12
-  convFilterWidth = 7
-  convOutCh = 128
+  emboutCh = 16
+  convFilterWidth = 3
+  convOutCh = 64
   convPadWidth = Int((convFilterWidth - 1)/2)
   lsOutCh = 3
   embed = Embedding(T, 10000, emboutCh)
