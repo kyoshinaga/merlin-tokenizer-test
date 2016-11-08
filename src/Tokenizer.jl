@@ -7,12 +7,12 @@ type Tokenizer <: Functor
   model
 end
 
-function Tokenizer(prefix::String)
+function Tokenizer(prefix::String = "")
   dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
   T = Float32
   emboutCh = 16
-  convFilterWidth = 3
-  convOutCh = 64
+  convFilterWidth = 9
+  convOutCh = 128
   convPadWidth = Int((convFilterWidth - 1)/2)
   lsOutCh = 3
   embed = Embedding(T, 10000, emboutCh)
@@ -26,19 +26,21 @@ function Tokenizer(prefix::String)
     x = reshape(x, size(x, 2), size(x, 3))
     x = transpose(x)
     x = relu(x)
-#	x = dropout(x, 0.5, true)
+	x = dropout(x, 0.5, true)
     x = ls(x)
     x
   end
-  outf = open(string("./data/",prefix,"/NetworkConstruction.tsv"),"w")
-  write(outf, "Embediding: ($(length(embed.ws)),$(length(embed.ws[1].data)))\n")
-  write(outf, "Conv:\n")
-  write(outf, "\tfilterdims: $(conv.filterdims)\n")
-  write(outf, "\tch: ($(size(conv.w.data,3)),$(size(conv.w.data,4)))\n")
-  write(outf, "\tstride: $(conv.stride)\n")
-  write(outf, "\tpaddims: $(conv.paddims)\n")
-  write(outf, "Linear: ($(size(ls.w, 2)),$(size(ls.w, 1)))\n")
-  close(outf)
+  if length(prefix) > 0
+    outf = open(string("./data/",prefix,"/NetworkConstruction.tsv"),"w")
+    write(outf, "Embediding: ($(length(embed.ws)),$(length(embed.ws[1].data)))\n")
+    write(outf, "Conv:\n")
+    write(outf, "\tfilterdims: $(conv.filterdims)\n")
+    write(outf, "\tch: ($(size(conv.w.data,3)),$(size(conv.w.data,4)))\n")
+    write(outf, "\tstride: $(conv.stride)\n")
+    write(outf, "\tpaddims: $(conv.paddims)\n")
+    write(outf, "Linear: ($(size(ls.w, 2)),$(size(ls.w, 1)))\n")
+    close(outf)
+  end
 
   Tokenizer(prefix, dict, IOE(), g)
 end

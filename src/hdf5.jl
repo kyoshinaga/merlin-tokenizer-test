@@ -11,6 +11,8 @@ function h5convert(x::Tuple)
     dict
 end
 
+h5convert(x::Bool) = convert(Int32, x)
+
 # Convolution
 function h5convert(f::Merlin.Conv)
     N = length(f.filterdims)
