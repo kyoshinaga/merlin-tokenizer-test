@@ -56,10 +56,12 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
 
   opt = SGD(learningRate, momentum=momentumRate)
 
+  outLR = open(string("./data/",t.prefix,"/learningRate.tsv"),"w")
+  write(outLR,"learning rate:\t$(learningRate)\n")
+  write(outLR,"momentum rate:\t$(momentumRate)\n")
+  close(outLR)
+  
   outf = open(string("./data/",t.prefix,"/trainProgress.tsv"),"w")
-
-  write(outf,"learning rate:\t$(learningRate)\n")
-  write(outf,"momentum rate:\t$(momentumRate)\n")
   write(outf,"epoch\ttrain gold\ttrain correct\ttrain acc.\ttest gold\ttest correct\ttest acc.\ttrain loss\tvalid loss\n")
 
   firstUpdatedFlag = true
@@ -81,13 +83,6 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
       argmax(t.model(x).data, 1)
     end
 
-    validLoss = 0
-    for data in zip(test_x,test_y)
-        z = t.model(data[1])
-        l = crossentropy(data[2], z)
-        validLoss += sum(l.data)
-    end
-
     train_correct, train_total = 0, 0
     test_correct, test_total = 0, 0
 
@@ -103,6 +98,7 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
 		test_total += total
 	end
 
+
     trainAcc = sprintf1(fmt, (train_correct / train_total))
     validAcc = sprintf1(fmt, (test_correct / test_total))
 
@@ -113,6 +109,13 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
     println("\tGold : $(test_total), Correct: $(test_correct)")
     println("\ttest acc.: $(validAcc)")
     println("")
+
+    validLoss = 0
+    for data in zip(test_x,test_y)
+        z = t.model(data[1])
+        l = crossentropy(data[2], z)
+        validLoss += sum(l.data)
+    end
 
     # file output
     write(outf, "$(epoch)\t$(train_total)\t$(train_correct)\t$(trainAcc)\t$(test_total)\t$(test_correct)\t$(validAcc)\t$(trainLoss)\t$(validLoss)\n")
