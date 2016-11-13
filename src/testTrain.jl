@@ -27,7 +27,7 @@ function encode(t::Tokenizer, doc::Vector)
 	chars, ranges
 end
 
-function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; batchFlag=false, dynamicRate=false)
+function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; batchFlag=false, dynamicRate=false, learningRate=0.001)
   chars, ranges = encode(t, trainData)
   tags = []
   map(zip(chars, ranges)) do x
@@ -51,7 +51,6 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
   end
   test_x, test_y = chars2, tags2
 
-  learningRate = 0.00001
   momentumRate = 0.9
 
   opt = SGD(learningRate, momentum=momentumRate)
@@ -97,7 +96,6 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
 		test_correct += correct
 		test_total += total
 	end
-
 
     trainAcc = sprintf1(fmt, (train_correct / train_total))
     validAcc = sprintf1(fmt, (test_correct / test_total))

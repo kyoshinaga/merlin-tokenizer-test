@@ -7,27 +7,31 @@ type Tokenizer <: Functor
   model
 end
 
-function Tokenizer(prefix::String = "")
+function Tokenizer(prefix::String = "";emboutCh=32,convFilterWidth=3)
   dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
   T = Float32
-  emboutCh = 16
-  convFilterWidth = 9
+#  emboutCh = 32
+#  convFilterWidth = 9
   convOutCh = 128
   convPadWidth = Int((convFilterWidth - 1)/2)
-  lsOutCh = 3
+  lsOutCh = 32
+  lsOutCh2 = 3
   embed = Embedding(T, 10000, emboutCh)
   conv = Conv(T, (emboutCh,convFilterWidth),(1,convOutCh),paddims=(0,convPadWidth))
   ls = Linear(T, convOutCh, lsOutCh)
+  ls2 = Linear(T, lsOutCh, lsOutCh2)
   g = @graph begin
     chars = identity(:chars)
     x = Var(reshape(chars, 1, length(chars)))
     x = embed(x)
+#	x = dropout(x, 0.25, true)
     x = conv(x)
     x = reshape(x, size(x, 2), size(x, 3))
     x = transpose(x)
     x = relu(x)
 	x = dropout(x, 0.5, true)
     x = ls(x)
+    x = ls2(x)
     x
   end
   if length(prefix) > 0
