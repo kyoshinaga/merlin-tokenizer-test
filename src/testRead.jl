@@ -14,7 +14,7 @@ function readCorpus(path::String)
         for j = 1:length(s)
             push!(sent, s[string(j)])
         end
-        push!(sent,["\n","S"])
+#        push!(sent,["\n","S"])
         push!(doc, sent)
     end
     doc

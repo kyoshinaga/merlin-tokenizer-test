@@ -29,7 +29,7 @@ function Tokenizer(prefix::String = "";emboutCh=32,convFilterWidth=3)
     x = reshape(x, size(x, 2), size(x, 3))
     x = transpose(x)
     x = relu(x)
-	x = dropout(x, 0.5, true)
+#	x = dropout(x, 0.5, true)
     x = ls(x)
     x = ls2(x)
     x
@@ -43,6 +43,7 @@ function Tokenizer(prefix::String = "";emboutCh=32,convFilterWidth=3)
     write(outf, "\tstride: $(conv.stride)\n")
     write(outf, "\tpaddims: $(conv.paddims)\n")
     write(outf, "Linear: ($(size(ls.w, 2)),$(size(ls.w, 1)))\n")
+    write(outf, "Linear2: ($(size(ls2.w, 2)),$(size(ls2.w, 1)))\n")
     close(outf)
   end
 
