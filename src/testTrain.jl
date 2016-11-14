@@ -27,7 +27,7 @@ function encode(t::Tokenizer, doc::Vector)
 	chars, ranges
 end
 
-function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; batchFlag=false, dynamicRate=false, learningRate=0.001)
+function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; batchFlag=false, dynamicRate=false)
   chars, ranges = encode(t, trainData)
   tags = []
   map(zip(chars, ranges)) do x
@@ -51,16 +51,15 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
   end
   test_x, test_y = chars2, tags2
 
+  learningRate = 0.01
   momentumRate = 0.9
 
   opt = SGD(learningRate, momentum=momentumRate)
 
-  outLR = open(string("./data/",t.prefix,"/learningRate.tsv"),"w")
-  write(outLR,"learning rate:\t$(learningRate)\n")
-  write(outLR,"momentum rate:\t$(momentumRate)\n")
-  close(outLR)
-  
   outf = open(string("./data/",t.prefix,"/trainProgress.tsv"),"w")
+
+  write(outf,"learning rate:\t$(learningRate)\n")
+  write(outf,"momentum rate:\t$(momentumRate)\n")
   write(outf,"epoch\ttrain gold\ttrain correct\ttrain acc.\ttest gold\ttest correct\ttest acc.\ttrain loss\tvalid loss\n")
 
   firstUpdatedFlag = true
@@ -80,6 +79,13 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
 
     test_z = map(test_x) do x
       argmax(t.model(x).data, 1)
+    end
+
+    validLoss = 0
+    for data in zip(test_x,test_y)
+        z = t.model(data[1])
+        l = crossentropy(data[2], z)
+        validLoss += sum(l.data)
     end
 
     train_correct, train_total = 0, 0
@@ -108,13 +114,6 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
     println("\ttest acc.: $(validAcc)")
     println("")
 
-    validLoss = 0
-    for data in zip(test_x,test_y)
-        z = t.model(data[1])
-        l = crossentropy(data[2], z)
-        validLoss += sum(l.data)
-    end
-
     # file output
     write(outf, "$(epoch)\t$(train_total)\t$(train_correct)\t$(trainAcc)\t$(test_total)\t$(test_correct)\t$(validAcc)\t$(trainLoss)\t$(validLoss)\n")
 
@@ -129,8 +128,8 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
         end
     end
 
-	if epoch % (nepoch/10) == 0 
-        h5save(string("./model/",t.prefix,"/tokenizer_",string(epoch),".h5"),t)
+	if epoch % (nepoch/10) == 0
+        #h5save(string("./model/",t.prefix,"/tokenizer_",string(epoch),".h5"),t)
         flush(outf)
     end
 

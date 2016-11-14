@@ -7,31 +7,27 @@ type Tokenizer <: Functor
   model
 end
 
-function Tokenizer(prefix::String = "";emboutCh=32,convFilterWidth=3)
+function Tokenizer(prefix::String = "")
   dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
   T = Float32
-#  emboutCh = 32
-#  convFilterWidth = 9
-  convOutCh = 128
+  emboutCh = 2
+  convFilterWidth = 3
+  convOutCh = 4
   convPadWidth = Int((convFilterWidth - 1)/2)
-  lsOutCh = 32
-  lsOutCh2 = 3
-  embed = Embedding(T, 10000, emboutCh)
+  lsOutCh = 3
+  embed = Embedding(T, 20, emboutCh)
   conv = Conv(T, (emboutCh,convFilterWidth),(1,convOutCh),paddims=(0,convPadWidth))
   ls = Linear(T, convOutCh, lsOutCh)
-  ls2 = Linear(T, lsOutCh, lsOutCh2)
   g = @graph begin
     chars = identity(:chars)
     x = Var(reshape(chars, 1, length(chars)))
     x = embed(x)
-#	x = dropout(x, 0.25, true)
     x = conv(x)
     x = reshape(x, size(x, 2), size(x, 3))
     x = transpose(x)
     x = relu(x)
 #	x = dropout(x, 0.5, true)
     x = ls(x)
-    x = ls2(x)
     x
   end
   if length(prefix) > 0
@@ -43,7 +39,6 @@ function Tokenizer(prefix::String = "";emboutCh=32,convFilterWidth=3)
     write(outf, "\tstride: $(conv.stride)\n")
     write(outf, "\tpaddims: $(conv.paddims)\n")
     write(outf, "Linear: ($(size(ls.w, 2)),$(size(ls.w, 1)))\n")
-    write(outf, "Linear2: ($(size(ls2.w, 2)),$(size(ls2.w, 1)))\n")
     close(outf)
   end
 

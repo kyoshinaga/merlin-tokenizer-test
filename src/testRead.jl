@@ -14,7 +14,6 @@ function readCorpus(path::String)
         for j = 1:length(s)
             push!(sent, s[string(j)])
         end
-#        push!(sent,["\n","S"])
         push!(doc, sent)
     end
     doc
@@ -88,24 +87,18 @@ function readJuman(path)
       line = chomp(line)
       tag = ""
       if line == "EOS"
-          word = ["\n","S"]
-          push!(sent,word)
           length(sent) > 0 && push!(doc, sent)
           sent = []
           newflag = true
       else
           items = split(line, ' ')
-          if contains(items[1],"\t")
-              println("Detected TAB")
-          else
-		    tag = (items[4] != "特殊" ? "_" : "S")
-            if index != 1 && newflag
-		        tag = string(tag, "N")
-		        newflag = false
-		    end
-		    word = [items[1], tag]
-            push!(sent, word)
-          end
+		  tag = (items[4] != "特殊" ? "_" : "S")
+          if index != 1 && newflag
+			  tag = string(tag, "N")
+			  newflag = false
+		  end
+		  word = [items[1], tag]
+          push!(sent, word)
       end
   end
   length(sent) > 0 && push!(doc, sent)
