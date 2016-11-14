@@ -29,7 +29,7 @@ function Tokenizer(prefix::String = "";emboutCh=32,convFilterWidth=3)
     x = reshape(x, size(x, 2), size(x, 3))
     x = transpose(x)
     x = relu(x)
-#	x = dropout(x, 0.5, true)
+	x = dropout(x, 0.5, true)
     x = ls(x)
     x = ls2(x)
     x

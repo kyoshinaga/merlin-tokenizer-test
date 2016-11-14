@@ -12,58 +12,7 @@ jpnValidDoc = readCorpus("./corpus/jpnValidDoc.h5")
 println("Train data:\t($(length(jpnTrainDoc)))")
 println("Valid data:\t($(length(jpnValidDoc)))")
 
-prefix = "pattern23"
-
-success(`mkdir -p ./data/$(prefix)`)
-success(`mkdir -p ./model/$(prefix)`)
-
-t = Tokenizer(prefix,emboutCh=32,convFilterWidth=3)
-
-beginTime = time()
-@time @CPUtime train(t, 100, jpnTrainDoc, jpnValidDoc, learningRate=0.00001)
-endTime = time()
-
-outf = open("./data/$(prefix)/computeTime.txt","w")
-write(outf,"time:\t$(endTime - beginTime)") 
-close(outf)
-
-h5save(string("./model/",prefix,"/tokenizer_result.h5"),t)
-
-prefix = "pattern24"
-
-success(`mkdir -p ./data/$(prefix)`)
-success(`mkdir -p ./model/$(prefix)`)
-
-t = Tokenizer(prefix,emboutCh=32,convFilterWidth=5)
-
-beginTime = time()
-@time @CPUtime train(t, 100, jpnTrainDoc, jpnValidDoc, learningRate=0.00001)
-endTime = time()
-
-outf = open("./data/$(prefix)/computeTime.txt","w")
-write(outf,"time:\t$(endTime - beginTime)") 
-close(outf)
-
-h5save(string("./model/",prefix,"/tokenizer_result.h5"),t)
-
-prefix = "pattern25"
-
-success(`mkdir -p ./data/$(prefix)`)
-success(`mkdir -p ./model/$(prefix)`)
-
-t = Tokenizer(prefix,emboutCh=32,convFilterWidth=7)
-
-beginTime = time()
-@time @CPUtime train(t, 100, jpnTrainDoc, jpnValidDoc, learningRate=0.00001)
-endTime = time()
-
-outf = open("./data/$(prefix)/computeTime.txt","w")
-write(outf,"time:\t$(endTime - beginTime)") 
-close(outf)
-
-h5save(string("./model/",prefix,"/tokenizer_result.h5"),t)
-
-prefix = "pattern26"
+prefix = "pattern30"
 
 success(`mkdir -p ./data/$(prefix)`)
 success(`mkdir -p ./model/$(prefix)`)
@@ -71,7 +20,59 @@ success(`mkdir -p ./model/$(prefix)`)
 t = Tokenizer(prefix,emboutCh=32,convFilterWidth=9)
 
 beginTime = time()
-@time @CPUtime train(t, 100, jpnTrainDoc, jpnValidDoc, learningRate=0.00001)
+@time @CPUtime train(t, 200, jpnTrainDoc, jpnValidDoc, learningRate=0.00001)
+endTime = time()
+
+outf = open("./data/$(prefix)/computeTime.txt","w")
+write(outf,"time:\t$(endTime - beginTime)") 
+close(outf)
+
+h5save(string("./model/",prefix,"/tokenizer_result.h5"),t)
+
+
+prefix = "pattern27"
+
+success(`mkdir -p ./data/$(prefix)`)
+success(`mkdir -p ./model/$(prefix)`)
+
+t = Tokenizer(prefix,emboutCh=32,convFilterWidth=3)
+
+beginTime = time()
+@time @CPUtime train(t, 200, jpnTrainDoc, jpnValidDoc, learningRate=0.00001)
+endTime = time()
+
+outf = open("./data/$(prefix)/computeTime.txt","w")
+write(outf,"time:\t$(endTime - beginTime)") 
+close(outf)
+
+h5save(string("./model/",prefix,"/tokenizer_result.h5"),t)
+
+prefix = "pattern28"
+
+success(`mkdir -p ./data/$(prefix)`)
+success(`mkdir -p ./model/$(prefix)`)
+
+t = Tokenizer(prefix,emboutCh=32,convFilterWidth=5)
+
+beginTime = time()
+@time @CPUtime train(t, 200, jpnTrainDoc, jpnValidDoc, learningRate=0.00001)
+endTime = time()
+
+outf = open("./data/$(prefix)/computeTime.txt","w")
+write(outf,"time:\t$(endTime - beginTime)") 
+close(outf)
+
+h5save(string("./model/",prefix,"/tokenizer_result.h5"),t)
+
+prefix = "pattern29"
+
+success(`mkdir -p ./data/$(prefix)`)
+success(`mkdir -p ./model/$(prefix)`)
+
+t = Tokenizer(prefix,emboutCh=32,convFilterWidth=7)
+
+beginTime = time()
+@time @CPUtime train(t, 200, jpnTrainDoc, jpnValidDoc, learningRate=0.00001)
 endTime = time()
 
 outf = open("./data/$(prefix)/computeTime.txt","w")

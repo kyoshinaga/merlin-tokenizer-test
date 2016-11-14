@@ -31,10 +31,10 @@ println("Train data:\t($(length(jpnTrainDoc)))")
 println("Valid data:\t($(length(jpnValidDoc)))")
 
 # pattern1
-doTest(jpnTrainDoc,jpnValidDoc,"20161114/pattern5", 200, 32, 11)
+doTest(jpnTrainDoc,jpnValidDoc,"pattern27", 200, 32, 3)
 # pattern1
-#doTest(jpnTrainDoc,jpnValidDoc,"20161114/pattern2", 200, 32, 5)
-## pattern1
-#doTest(jpnTrainDoc,jpnValidDoc,"20161114/pattern3", 200, 32, 7)
-## pattern1
-#doTest(jpnTrainDoc,jpnValidDoc,"20161114/pattern4", 200, 32, 9)
+doTest(jpnTrainDoc,jpnValidDoc,"pattern28", 200, 32, 5)
+# pattern1
+doTest(jpnTrainDoc,jpnValidDoc,"pattern29", 200, 32, 7)
+# pattern1
+doTest(jpnTrainDoc,jpnValidDoc,"pattern30", 200, 32, 9)
