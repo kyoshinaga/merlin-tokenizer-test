@@ -24,17 +24,43 @@ function doTest(trainData, validData, prefix::String, nepoch::Int, emboutCh::Int
     h5save(string("./model/",prefix,"/tokenizer_result.h5"),t)
 end
 
+function accuracy(gold, test)
+    totalGold = 0
+    correctTest = 0
+    for i = 1:length(gold)
+        for j = 1:length(gold[i])
+            gold[i][j] == test[i][j] && (correctTest += 1)
+            totalGold += 1
+        end
+    end
+    correctTest / totalGold
+end
+
 jpnTrainDoc = readCorpus("./corpus/jpnTrainDoc.h5")
 jpnValidDoc = readCorpus("./corpus/jpnValidDoc.h5")
+jpnTestDoc = readCorpus("./corpus/jpnTestDoc.h5")
 
 println("Train data:\t($(length(jpnTrainDoc)))")
 println("Valid data:\t($(length(jpnValidDoc)))")
+println("Test data:\t($(length(jpnTestDoc)))")
+
+prefix = "20161115/pattern4"
+nepoch = 500
+embCh = 32
+
+doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 9)
+t8 = h5loadTokenizer("./model/$(prefix)/tokenizer_result.h5")
 
 # pattern1
-doTest(jpnTrainDoc,jpnValidDoc,"20161114/pattern5", 200, 32, 11)
-# pattern1
-#doTest(jpnTrainDoc,jpnValidDoc,"20161114/pattern2", 200, 32, 5)
-## pattern1
-#doTest(jpnTrainDoc,jpnValidDoc,"20161114/pattern3", 200, 32, 7)
-## pattern1
-#doTest(jpnTrainDoc,jpnValidDoc,"20161114/pattern4", 200, 32, 9)
+prefix = "20161115/pattern1"
+doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 3)
+t5 = h5loadTokenizer("./model/$(prefix)/tokenizer_result.h5")
+# pattern2
+prefix = "20161115/pattern2"
+doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 5)
+t6 = h5loadTokenizer("./model/$(prefix)/tokenizer_result.h5")
+# pattern3
+prefix = "20161115/pattern3"
+doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
+t7 = h5loadTokenizer("./model/$(prefix)/tokenizer_result.h5")
+ pattern8

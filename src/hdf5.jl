@@ -45,9 +45,9 @@ end
 
 # Loading
 
-h5loadTokenizer(filename::String, outputFile::String) = h5loadTokenizer!(h5read(filename, "Merlin"), outputFile)
+h5loadTokenizer(filename::String; outputFile::String="") = h5loadTokenizer!(h5read(filename, "Merlin"), outputFile)
 
-function h5loadTokenizer!(data::Dict, filename::String)
+function h5loadTokenizer!(data::Dict,filename::String)
     if haskey(data,"#TYPE") && data["#TYPE"] == "testJukaiNLP.Tokenizer"
         delete!(data,"#TYPE")
         tagset = h5loadTag!(data["tagset"])
@@ -58,6 +58,8 @@ function h5loadTokenizer!(data::Dict, filename::String)
         T = Float32
 
 		nodeDict = Dict{String, Merlin.Functor}()
+
+        lsIndex = 1
 
         for (k,v) in model
             typeName = v["1"]["#TYPE"]
@@ -71,7 +73,8 @@ function h5loadTokenizer!(data::Dict, filename::String)
             end
             if typeName == "Merlin.Linear"
                 ls = h5load!(v["1"])
-				nodeDict["ls"] = ls
+                nodeDict["ls$(lsIndex)"] = ls
+                lsIndex += 1
             end
         end
 
@@ -84,7 +87,8 @@ function h5loadTokenizer!(data::Dict, filename::String)
           x = transpose(x)
           x = relu(x)
 		  x = dropout(x, 0.5, false)
-          x = nodeDict["ls"](x)
+          x = nodeDict["ls1"](x)
+          x = nodeDict["ls2"](x)
           x
         end
 
