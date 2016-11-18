@@ -28,7 +28,7 @@ end
 
 doc = flattenDoc(doc)
 docLuw = flattenDoc(docLuw)
-#
+
 #numOfData = length(doc)
 #numOfTrainData = Int(floor(0.8 * numOfData))
 #numOfValidData = Int(floor(0.9 * numOfData))
