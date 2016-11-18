@@ -7,7 +7,8 @@ function readCorpus(path::String)
     delete!(dict, "#TYPE")
     doc = []
 
-	for s in dict
+	for i = 1:length(dict)
+		s = dict[string(i)]
         sent = []
         delete!(s, "#TYPE")
         for j = 1:length(s)
