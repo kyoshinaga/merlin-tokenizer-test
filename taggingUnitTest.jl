@@ -34,7 +34,7 @@ words, tags = encode(t, doc)
 println("correct")
 println(transpose(correct))
 println("char")
-println(transpose(tags))
+println(transpose(tags[1]))
 
 failed = 0
 for p in zip(tags, correct)
