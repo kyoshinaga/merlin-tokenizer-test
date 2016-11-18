@@ -16,7 +16,7 @@ function Tokenizer(prefix::String = "";emboutCh=32,convFilterWidth=3)
   convPadWidth = Int((convFilterWidth - 1)/2)
   lsOutCh = 32
   lsOutCh2 = 3
-  embed = Embedding(T, 10000, emboutCh)
+  embed = Embedding(T, 1000000, emboutCh)
   conv = Conv(T, (emboutCh,convFilterWidth),(1,convOutCh),paddims=(0,convPadWidth))
   ls = Linear(T, convOutCh, lsOutCh)
   ls2 = Linear(T, lsOutCh, lsOutCh2)
