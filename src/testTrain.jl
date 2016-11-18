@@ -4,39 +4,40 @@ using Formatting
 
 function encode(t::Tokenizer, doc::Vector)
 	unk, space, lf = t.dict["UNKNOWN"], t.dict[" "], t.dict["\n"]
-	chars = []
-	ranges = []
+	biTag = Dict("Ba"=>t.tagset.Ba, "Ia"=>t.tagset.Ia,"B"=>t.tagset.B,"I"=>t.tagset.I)
+	words = []
+	tags = []
 	for sent in doc
-		push!(sent,["UNKNOWN","B"])
-		charVector = Int[]
-		rangeVector = UnitRange{Int}[]
-		pos = 1
-		index = 1
+		wordVector = Int[]
+		tagVector = Int[]
+		#pos = 1
+		#index = 1
 		for (word, tag) in sent
-			index += 1
-			if endswith(tag,'N')
-				push!(charVector, lf)
-				pos += 1
-			end
-			word != "UNKNOWN" && push!(charVector, push!(t.dict, string(word)))
+			#index += 1
+			#if endswith(tag,'N')
+			#	push!(charVector, lf)
+			#	pos += 1
+			#end
+			push!(wordVector, push!(t.dict, string(word)))
+			push!(tagVector,biTag[tag])
 			#startswith(tag,'S') || push!(rangeVector, pos:pos+length(word) - 1)
-			if startswith(tag,'B') && pos != 1
-				push!(rangeVector, pos:(index - 1))
-				pos = index
-			end
+			#if startswith(tag,'B') && pos != 1
+			#	push!(rangeVector, pos:(index - 1))
+			#	pos = index
+			#end
 		end
-		push!(chars, charVector)
-		push!(ranges, rangeVector)
+		push!(words, wordVector)
+		push!(tags, tagVector)
 	end
-	chars, ranges
+	chars, tags
 end
 
 function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; batchFlag=false, dynamicRate=false, learningRate=0.001)
-	chars, ranges = encode(t, trainData)
-	tags = []
-	map(zip(chars, ranges)) do x
-		push!(tags, encode(t.tagset, x[2], length(x[1])))
-	end
+	chars, tags = encode(t, trainData)
+	#tags = []
+	#map(zip(chars, ranges)) do x
+	#	push!(tags, encode(t.tagset, x[2], length(x[1])))
+	#end
 
 	if (batchFlag)
 		train_x = []
@@ -49,10 +50,10 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
 	end
 
 	chars2, ranges2 = encode(t, testData)
-	tags2 = []
-	map(zip(chars2, ranges2)) do x
-		push!(tags2, encode(t.tagset, x[2], length(x[1])))
-	end
+	#tags2 = []
+	#map(zip(chars2, ranges2)) do x
+	#	push!(tags2, encode(t.tagset, x[2], length(x[1])))
+	#end
 	test_x, test_y = chars2, tags2
 
 	momentumRate = 0.9

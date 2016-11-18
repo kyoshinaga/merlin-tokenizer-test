@@ -47,7 +47,7 @@ function Tokenizer(prefix::String = "";emboutCh=32,convFilterWidth=3)
     close(outf)
   end
 
-  Tokenizer(prefix, dict, IOE(), g)
+  Tokenizer(prefix, dict, BI(), g)
 end
 
 function TokenizerAutoEncode()
