@@ -7,8 +7,7 @@ function readCorpus(path::String)
     delete!(dict, "#TYPE")
     doc = []
 
-    for i = 1:length(dict)
-        s = dict[string(i)]
+	for s in dict
         sent = []
         delete!(s, "#TYPE")
         for j = 1:length(s)
@@ -131,7 +130,7 @@ function readMecabJuman(str::Array{String})
           # sent = []
           # Bug of newline charactor
           # This should be modify if i have extra time.
-          # newflag = true  
+          # newflag = true
       else
           items = split(line, ' ')
 		  tag = (items[2] != "特殊" ? "_" : "S")
