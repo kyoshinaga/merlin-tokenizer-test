@@ -18,7 +18,7 @@ numList = length(fileList)
 doneList = []
 index = 0
 
-map(fileList[1:1]) do f
+map(fileList[10:10]) do f
 	push!(doneList, f)
 	println(string(f,",$(length(doneList)):$(numList)"))
 	suw, luw = readBCCWJ(string(prefix, f))

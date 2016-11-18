@@ -26,35 +26,6 @@ push!(sent, ["。", "S"])
 push!(correct,2)
 push!(doc, sent)
 
-sent = []
-push!(sent, ["大蔵", "_N"])
-push!(correct,2)
-push!(correct,1)
-push!(correct,3)
-push!(sent, ["省", "_"])
-push!(correct,3)
-push!(sent, ["。", "S"])
-push!(correct,2)
-push!(doc, sent)
-
-sent = []
-push!(sent, ["↓","SN"])
-push!(correct,2)
-push!(correct,2)
-push!(sent, ["。","S"])
-push!(correct,2)
-push!(doc, sent)
-
-sent = []
-push!(sent, ["あいつ","_N"])
-push!(correct,2)
-push!(correct,1)
-push!(correct,1)
-push!(correct,3)
-push!(sent, ["。","S"])
-push!(correct,2)
-push!(doc, sent)
-
 t = Tokenizer("")
 chars, ranges = encode(t, doc)
 tags = encode(t.tagset, ranges, length(chars))

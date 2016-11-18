@@ -20,7 +20,7 @@ function encode(t::Tokenizer, doc::Vector)
 			end
 			word != "UNKNOWN" && push!(charVector, push!(t.dict, string(word)))
 			#startswith(tag,'S') || push!(rangeVector, pos:pos+length(word) - 1)
-			if startswith(tag,'B') && pos == 1
+			if startswith(tag,'B') && pos != 1
 				push!(rangeVector, pos:(index - 1))
 				pos = index
 			end
