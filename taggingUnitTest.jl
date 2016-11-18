@@ -37,7 +37,7 @@ println("char")
 println(transpose(tags[1]))
 
 failed = 0
-for p in zip(tags, correct)
+for p in zip(tags[1], correct)
     p[1] != p[2] && (failed += 1)
 end
 
