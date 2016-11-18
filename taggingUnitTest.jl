@@ -4,31 +4,32 @@ using testJukaiNLP
 doc = []
 sent = []
 correct = []
+biTags = Dict("Ba"=>1,"Ia"=>2,"B"=>3,"I"=>4)
 
-push!(sent, ["村山", "_"])
-push!(correct,1)
-push!(correct,3)
-push!(sent, ["富一", "_"])
-push!(correct,1)
-push!(correct,3)
-push!(sent, ["首相", "_"])
-push!(correct,1)
-push!(correct,3)
-push!(sent, ["は", "_"])
-push!(correct,3)
-push!(sent, ["、", "S"])
-push!(correct,2)
-push!(sent, ["決めた", "_"])
-push!(correct,1)
-push!(correct,1)
-push!(correct,3)
-push!(sent, ["。", "S"])
-push!(correct,2)
+push!(sent, ["ナルト", "B"])
+push!(sent, ["激闘","I"])
+push!(sent, ["忍者","Ia"])
+push!(sent, ["対戦","I"])
+push!(sent, ["三","Ba"])
+push!(sent, ["の","Ba"])
+push!(sent, ["キャラクター","Ba"])
+push!(sent, ["は","Ba"])
+push!(sent, ["全部","B"])
+push!(sent, ["で","Ba"])
+push!(sent, ["何","Ba"])
+push!(sent, ["体","I"])
+push!(sent, ["居る","B"])
+push!(sent, ["の","B"])
+push!(sent, ["です","Ia"])
+push!(sent, ["か","Ba"])
 push!(doc, sent)
 
+correct = map(sent) do x
+	biTags(x[2])
+end
+
 t = Tokenizer("")
-chars, ranges = encode(t, doc)
-tags = encode(t.tagset, ranges, length(chars))
+words, tags = encode(t, doc)
 
 println("correct")
 println(transpose(correct))

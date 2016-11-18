@@ -10,26 +10,14 @@ function encode(t::Tokenizer, doc::Vector)
 	for sent in doc
 		wordVector = Int[]
 		tagVector = Int[]
-		#pos = 1
-		#index = 1
 		for (word, tag) in sent
-			#index += 1
-			#if endswith(tag,'N')
-			#	push!(charVector, lf)
-			#	pos += 1
-			#end
 			push!(wordVector, push!(t.dict, string(word)))
 			push!(tagVector,biTag[tag])
-			#startswith(tag,'S') || push!(rangeVector, pos:pos+length(word) - 1)
-			#if startswith(tag,'B') && pos != 1
-			#	push!(rangeVector, pos:(index - 1))
-			#	pos = index
-			#end
 		end
 		push!(words, wordVector)
 		push!(tags, tagVector)
 	end
-	chars, tags
+	words, tags
 end
 
 function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; batchFlag=false, dynamicRate=false, learningRate=0.001)
