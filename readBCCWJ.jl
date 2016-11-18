@@ -29,9 +29,6 @@ end
 doc = flattenDoc(doc)
 docLuw = flattenDoc(docLuw)
 
-t = Tokenizer()
-words, tags = encoe(t, docLuw)
-
 #numOfData = length(doc)
 #numOfTrainData = Int(floor(0.8 * numOfData))
 #numOfValidData = Int(floor(0.9 * numOfData))

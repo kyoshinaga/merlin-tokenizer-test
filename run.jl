@@ -18,7 +18,7 @@ function doTest(trainData, validData, prefix::String, nepoch::Int, emboutCh::Int
     endTime = time()
 
     outf = open("./data/$(prefix)/computeTime.txt","w")
-    write(outf,"time:\t$(endTime - beginTime)") 
+    write(outf,"time:\t$(endTime - beginTime)")
     close(outf)
 
     h5save(string("./model/",prefix,"/tokenizer_result.h5"),t)
@@ -36,31 +36,17 @@ function accuracy(gold, test)
     correctTest / totalGold
 end
 
-jpnTrainDoc = readCorpus("./corpus/jpnTrainDoc.h5")
-jpnValidDoc = readCorpus("./corpus/jpnValidDoc.h5")
-jpnTestDoc = readCorpus("./corpus/jpnTestDoc.h5")
+#jpnTrainDoc = readCorpus("./corpus/bccwjDic/jpnTrainDoc.h5")
+jpnValidDoc = readCorpus("./corpus/bccwjDic/jpnValidDoc.h5")
+#jpnTestDoc = readCorpus( "./corpus/bccwjDic/jpnTestDoc.h5")
 
-println("Train data:\t($(length(jpnTrainDoc)))")
+#println("Train data:\t($(length(jpnTrainDoc)))")
 println("Valid data:\t($(length(jpnValidDoc)))")
-println("Test data:\t($(length(jpnTestDoc)))")
+#println("Test data:\t($(length(jpnTestDoc)))")
 
-prefix = "20161115/pattern4"
-nepoch = 500
+prefix = "20161118/pattern1"
+nepoch = 10
 embCh = 32
 
-doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 9)
-t8 = h5loadTokenizer("./model/$(prefix)/tokenizer_result.h5")
-
-# pattern1
-prefix = "20161115/pattern1"
-doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 3)
-t5 = h5loadTokenizer("./model/$(prefix)/tokenizer_result.h5")
-# pattern2
-prefix = "20161115/pattern2"
-doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 5)
-t6 = h5loadTokenizer("./model/$(prefix)/tokenizer_result.h5")
-# pattern3
-prefix = "20161115/pattern3"
-doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
-t7 = h5loadTokenizer("./model/$(prefix)/tokenizer_result.h5")
- pattern8
+#doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
+doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 7)

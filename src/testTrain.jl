@@ -37,7 +37,7 @@ function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; b
 		train_y = tags
 	end
 
-	chars2, ranges2 = encode(t, testData)
+	chars2, tags2 = encode(t, testData)
 	#tags2 = []
 	#map(zip(chars2, ranges2)) do x
 	#	push!(tags2, encode(t.tagset, x[2], length(x[1])))
