@@ -25,7 +25,7 @@ push!(sent, ["か","Ba"])
 push!(doc, sent)
 
 correct = map(sent) do x
-	biTags(x[2])
+	biTags[x[2]]
 end
 
 t = Tokenizer("")
