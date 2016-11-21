@@ -44,9 +44,9 @@ jpnValidDoc = readCorpus("./corpus/jpnValidDoc.h5")
 println("Valid data:\t($(length(jpnValidDoc)))")
 #println("Test data:\t($(length(jpnTestDoc)))")
 
-prefix = "20161118/pattern1"
+prefix = "20161121/test"
 nepoch = 10
 embCh = 32
 
 #doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
-doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
+doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 5)

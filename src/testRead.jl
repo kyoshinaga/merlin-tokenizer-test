@@ -1,4 +1,5 @@
 using LightXML
+using ProgressMeter
 importall LightXML
 export readconll, readknp, readBCCWJ, readJuman, readCorpus
 
@@ -6,6 +7,8 @@ function readCorpus(path::String)
     dict = h5read(path,"Merlin")
     delete!(dict, "#TYPE")
     doc = []
+
+	prog = Progress(length(dict))
 
 	for i = 1:length(dict)
 		s = dict[string(i)]
@@ -16,6 +19,7 @@ function readCorpus(path::String)
         end
 #        push!(sent,["\n","S"])
         push!(doc, sent)
+		next!(prog)
     end
     doc
 end
