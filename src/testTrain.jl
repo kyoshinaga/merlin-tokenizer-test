@@ -33,7 +33,6 @@ function encode(t::Tokenizer, doc::Vector)
 			if startswith(ioe, 'S')
 				push!(charVector, push!(t.dict, string(word)))
 				push!(tagVector, biTag[string("O_",bi)])
-				pos += 1
 			else
 				for c in word
 					push!(charVector, push!(t.dict, string(c)))
