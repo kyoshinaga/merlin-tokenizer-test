@@ -40,7 +40,7 @@ function encode(t::Tokenizer, doc::Vector)
 					push!(tagVector, biTag[string("I_",bi)])
 				end
 				pos += length(word)
-				tagVector[pos] = biTag[string("E_",bi)]
+				tagVector[pos-1] = biTag[string("E_",bi)]
 			end
 		end
 		push!(chars, charVector)

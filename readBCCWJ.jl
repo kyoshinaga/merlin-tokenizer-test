@@ -39,14 +39,27 @@ for (ioe, bi) in zip(doc, docLuw)
 	push!(docCombine, v)
 end
 
-#numOfData = length(docLuw)
-#numOfTrainData = Int(floor(0.8 * numOfData))
-#numOfValidData = Int(floor(0.9 * numOfData))
-#pickItemList = randperm(numOfData)
-#jpnTrainDoc = copy(docLuw[pickItemList[1:numOfTrainData]])
-#jpnValidDoc = copy(docLuw[pickItemList[(numOfTrainData+1):numOfValidData]])
-#jpnTestDoc = copy(docLuw[pickItemList[(numOfValidData+1):numOfData]])
-#
-#Merlin.h5save("./corpus/jpnTrainDoc.h5",jpnTrainDoc)
-#Merlin.h5save("./corpus/jpnValidDoc.h5",jpnValidDoc)
-#Merlin.h5save("./corpus/jpnTestDoc.h5",jpnTestDoc)
+function doTest(trainData, validData, prefix::String, nepoch::Int, emboutCh::Int, convFilterWidth::Int;learningRate=0.00001, dynamicRate::Bool=false)
+
+    success(`mkdir -p ./data/$(prefix)`)
+    success(`mkdir -p ./model/$(prefix)`)
+
+    t = Tokenizer(prefix,emboutCh=emboutCh,convFilterWidth=convFilterWidth)
+
+    beginTime = time()
+    @time @CPUtime train(t, nepoch, trainData, validData, learningRate=learningRate,dynamicRate=dynamicRate)
+    endTime = time()
+
+    outf = open("./data/$(prefix)/computeTime.txt","w")
+    write(outf,"time:\t$(endTime - beginTime)")
+    close(outf)
+
+    h5save(string("./model/",prefix,"/tokenizer_result.h5"),t)
+end
+
+prefix = "20161122/test"
+nepoch = 1000
+embCh = 32
+
+#doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
+doTest(docCombine, docCombine, prefix, nepoch, embCh, 5)
