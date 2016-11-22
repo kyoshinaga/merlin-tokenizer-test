@@ -91,7 +91,7 @@ t = Tokenizer("")
 words, tags = encode(t, doc)
 
 println("correct")
-println(transpose(correct[1]))
+println(transpose(corrects[1]))
 println("char")
 println(transpose(tags[1]))
 
