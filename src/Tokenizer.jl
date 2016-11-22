@@ -120,7 +120,19 @@ function (t::Tokenizer)(chars::Vector{Char})
   decode(t.tagset, tags)
 end
 
-(t::Tokenizer)(str:: String) = t(Vector{Char}(str))
+function (t::Tokenizer)(str:: String)
+	inputString = mecabUnidic(str)
+	t(Vector{Char}(inputString))
+end
+
+function mecabUnidic(str:: String)
+	r = readstring(pipeline(`echo $str`), `mecab -d /home/kyoshinaga/local/lib/mecab/dic/unidic/`)
+	r = chomp(r)
+	r = split(r,'\n')
+	r = map(y -> split(r, r"\t|\,"), r)
+	r = join(map(r -> length(r) > 3 ? r[4] : "", r))
+	r
+end
 
 function h5convert(f::Tokenizer)
     h5dict(Tokenizer, "tagset"=>f.tagset, "iddict"=>f.dict, "model"=>f.model)

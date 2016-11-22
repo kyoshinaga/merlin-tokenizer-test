@@ -50,7 +50,7 @@ h5loadTokenizer(filename::String; outputFile::String="") = h5loadTokenizer!(h5re
 function h5loadTokenizer!(data::Dict,filename::String)
     if haskey(data,"#TYPE") && data["#TYPE"] == "testJukaiNLP.Tokenizer"
         delete!(data,"#TYPE")
-        tagset = h5loadTag!(data["tagset"])
+        tagset = h5loadTagBi!(data["tagset"])
         iddict = h5loadId!(data["iddict"])
         model = data["model"]
         delete!(model, "#TYPE")
