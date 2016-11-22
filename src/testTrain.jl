@@ -4,20 +4,49 @@ using Formatting
 
 function encode(t::Tokenizer, doc::Vector)
 	unk, space, lf = t.dict["UNKNOWN"], t.dict[" "], t.dict["\n"]
-	biTag = Dict("Ba"=>t.tagset.Ba, "Ia"=>t.tagset.Ia,"B"=>t.tagset.B,"I"=>t.tagset.I)
-	words = []
+	biTag = Dict(
+	"I_Ba"=>t.tagset.I_Ba,
+	"I_Ia"=>t.tagset.I_Ia,
+	"I_B"=> t.tagset.I_B,
+	"I_I"=> t.tagset.I_I,
+	"E_Ba"=>t.tagset.E_Ba,
+	"E_Ia"=>t.tagset.E_Ia,
+	"E_B"=> t.tagset.E_B,
+	"E_I"=> t.tagset.E_I,
+	"O_Ba"=> t.tagset.O_Ba,
+	"O_Ia"=> t.tagset.O_Ia,
+	"O_B"=> t.tagset.O_B,
+	"O_I"=> t.tagset.O_I
+	)
+	chars = []
 	tags = []
 	for sent in doc
-		wordVector = Int[]
+		charVector = Int[]
 		tagVector = Int[]
-		for (word, tag) in sent
-			push!(wordVector, push!(t.dict, string(word)))
-			push!(tagVector,biTag[tag])
+		pos = 1
+		for (word, ioe, bi) in sent
+			if endswith(ioe, 'N')
+				push!(charVector, lf)
+				push!(tagVector, biTag["O_Ba"])
+				pos += 1
+			end
+			if startswith(tag, 'S')
+				push!(charVector, push!(t.dict, string(word)))
+				push!(tagVector, biTag[string("O_",bi)])
+				pos += 1
+			else
+				for c in word
+					push!(charVector, push!(t.dict, string(c)))
+					push!(tagVector, biTag[string("I_",bi)])
+				end
+				pos += length(word)
+				tagVector[pos] = biTag[string("E_",bi)]
+			end
 		end
-		push!(words, wordVector)
+		push!(chars, charVector)
 		push!(tags, tagVector)
 	end
-	words, tags
+	chars, tags
 end
 
 function train(t::Tokenizer, nepoch::Int, trainData::Vector, testData::Vector; batchFlag=false, dynamicRate=false, learningRate=0.001)

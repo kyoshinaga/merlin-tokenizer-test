@@ -41,13 +41,21 @@ end
 h5loadTag!(data) = IOE(data["I"],data["O"],data["E"])
 
 immutable BI <: Tagset
-	Ba::Int
-	Ia::Int
-	B::Int
-	I::Int
+	I_Ba::Int
+	I_Ia::Int
+	I_B::Int
+	I_I::Int
+	E_Ba::Int
+	E_Ia::Int
+	E_B::Int
+	E_I::Int
+	O_Ba::Int
+	O_Ia::Int
+	O_B::Int
+	O_I::Int
 end
 
-BI() = BI(1,2,3,4)
+BI() = BI(1,2,3,4,5,6,7,8,9,10,11,12)
 
 function decode(tagset::BI, tags::Vector{Int})
   bpos = 0
@@ -74,7 +82,33 @@ function encode(tagset::BI, ranges::Vector{UnitRange{Int}}, length::Int)
 end
 
 function h5convert(f::BI)
-    h5dict(IOE, "Ba"=>f.Ba, "Ia"=>f.Ia, "B"=>f.B, "I"=>f.I)
+    h5dict(IOE,
+	"I_Ba"=>f.I_Ba,
+	"I_Ia"=>f.I_Ia,
+	"I_B"=> f.I_B,
+	"I_I"=> f.I_I,
+	"E_Ba"=>f.E_Ba,
+	"E_Ia"=>f.E_Ia,
+	"E_B"=> f.E_B,
+	"E_I"=> f.E_I,
+	"O_Ba"=> f.O_Ba,
+	"O_Ia"=> f.O_Ia,
+	"O_B"=> f.O_B,
+	"O_I"=> f.O_I
+	)
 end
 
-h5loadTagBI!(data) = BI(data["Ba"],data["Ia"],data["B"],data["I"])
+h5loadTagBI!(data) = BI(
+data["I_Ba"],
+data["I_Ia"],
+data["I_B"],
+data["I_I"],
+data["E_Ba"],
+data["E_Ia"],
+data["E_B"],
+data["E_I"],
+data["O_Ba"],
+data["O_Ia"],
+data["O_B"],
+data["O_I"]
+)

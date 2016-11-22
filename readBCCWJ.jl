@@ -29,14 +29,24 @@ end
 doc = flattenDoc(doc)
 docLuw = flattenDoc(docLuw)
 
-numOfData = length(docLuw)
-numOfTrainData = Int(floor(0.8 * numOfData))
-numOfValidData = Int(floor(0.9 * numOfData))
-pickItemList = randperm(numOfData)
-jpnTrainDoc = copy(docLuw[pickItemList[1:numOfTrainData]])
-jpnValidDoc = copy(docLuw[pickItemList[(numOfTrainData+1):numOfValidData]])
-jpnTestDoc = copy(docLuw[pickItemList[(numOfValidData+1):numOfData]])
+docCombine = []
 
-Merlin.h5save("./corpus/jpnTrainDoc.h5",jpnTrainDoc)
-Merlin.h5save("./corpus/jpnValidDoc.h5",jpnValidDoc)
-Merlin.h5save("./corpus/jpnTestDoc.h5",jpnTestDoc)
+for (ioe, bi) in zip(doc, docLuw)
+	v = []
+	for (w1, w2) in zip(ioe, bi)
+		push!(v,[w2[1], w1[2], w2[2]])
+	end
+	push!(docCombine, v)
+end
+
+#numOfData = length(docLuw)
+#numOfTrainData = Int(floor(0.8 * numOfData))
+#numOfValidData = Int(floor(0.9 * numOfData))
+#pickItemList = randperm(numOfData)
+#jpnTrainDoc = copy(docLuw[pickItemList[1:numOfTrainData]])
+#jpnValidDoc = copy(docLuw[pickItemList[(numOfTrainData+1):numOfValidData]])
+#jpnTestDoc = copy(docLuw[pickItemList[(numOfValidData+1):numOfData]])
+#
+#Merlin.h5save("./corpus/jpnTrainDoc.h5",jpnTrainDoc)
+#Merlin.h5save("./corpus/jpnValidDoc.h5",jpnValidDoc)
+#Merlin.h5save("./corpus/jpnTestDoc.h5",jpnTestDoc)
