@@ -6,7 +6,7 @@ using CPUTime
 
 import Merlin: h5save, h5writedict, h5dict, h5convert
 
-function doTest(trainData, validData, prefix::String, nepoch::Int, emboutCh::Int, convFilterWidth::Int;learningRate=0.00001, dynamicRate::Bool=false)
+function doTest(trainData, validData, prefix::String, nepoch::Int, emboutCh::Int, convFilterWidth::Int;learningRate=0.0001, dynamicRate::Bool=false)
 
     success(`mkdir -p ./data/$(prefix)`)
     success(`mkdir -p ./model/$(prefix)`)
