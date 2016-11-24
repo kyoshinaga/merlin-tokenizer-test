@@ -38,14 +38,23 @@ end
 
 jpnTrainDoc = readCorpus("./corpus/jpnTrainDoc.h5")
 jpnValidDoc = readCorpus("./corpus/jpnValidDoc.h5")
-jpnTestDoc = readCorpus( "./corpus/jpnTestDoc.h5")
+#jpnTestDoc = readCorpus( "./corpus/jpnTestDoc.h5")
 
 println("Train data:\t($(length(jpnTrainDoc)))")
 println("Valid data:\t($(length(jpnValidDoc)))")
-println("Test data:\t($(length(jpnTestDoc)))")
+#println("Test data:\t($(length(jpnTestDoc)))")
 
 nepoch = 500
 embCh = 32
 
-prefix = "20161122/pattern1"
+prefix = "20161124/pattern1"
+doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 3)
+
+prefix = "20161124/pattern2"
 doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 5)
+
+prefix = "20161124/pattern3"
+doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
+
+prefix = "20161124/pattern4"
+doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 9)
