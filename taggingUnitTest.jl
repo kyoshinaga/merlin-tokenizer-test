@@ -84,6 +84,8 @@ push!(correct, biTags["E_I"])
 push!(sent, ["零落", "_", "Ia"])
 push!(correct, biTags["I_Ia"])
 push!(correct, biTags["E_Ia"])
+push!(sent, ["。", "S", "Ba"])
+push!(correct, biTags["O_Ba"])
 push!(doc, sent)
 push!(corrects, correct)
 
