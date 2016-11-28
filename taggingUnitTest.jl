@@ -92,10 +92,15 @@ push!(corrects, correct)
 t = Tokenizer("")
 words, tags = encode(t, doc)
 
-println("correct")
+println("correct[1]")
 println(transpose(corrects[1]))
-println("char")
+println("char[1]")
 println(transpose(tags[1]))
+
+println("correct[2]")
+println(transpose(corrects[2]))
+println("char[2]")
+println(transpose(tags[2]))
 
 failed = 0
 for (tag, cor) in zip(tags, correct)
