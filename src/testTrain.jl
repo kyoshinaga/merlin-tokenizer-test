@@ -9,14 +9,14 @@ function encode(t::Tokenizer, doc::Vector)
 	"I_Ia"=>t.tagset.I_Ia,
 	"I_B"=> t.tagset.I_B,
 	"I_I"=> t.tagset.I_I,
-	"E_Ba"=>t.tagset.E_Ba,
-	"E_Ia"=>t.tagset.E_Ia,
-	"E_B"=> t.tagset.E_B,
-	"E_I"=> t.tagset.E_I,
 	"O_Ba"=> t.tagset.O_Ba,
 	"O_Ia"=> t.tagset.O_Ia,
 	"O_B"=> t.tagset.O_B,
-	"O_I"=> t.tagset.O_I
+	"O_I"=> t.tagset.O_I,
+	"E_Ba"=>t.tagset.E_Ba,
+	"E_Ia"=>t.tagset.E_Ia,
+	"E_B"=> t.tagset.E_B,
+	"E_I"=> t.tagset.E_I
 	)
 	chars = []
 	tags = []
