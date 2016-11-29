@@ -60,20 +60,28 @@ BI() = BI(1,2,3,4,5,6,7,8,9,10,11,12)
 function decode(tagset::BI, tags::Vector{Int})
 	bpos = 0
 	ranges = UnitRange{Int}[]
-	biRanges = UnitRange{Int}[]
+	luwBpos = []
+	luwRanges = UnitRange{Int}[]
+	lpos = 0
 	tagIOE = IOE()
 	tagBI = BI()
 	for i = 1:length(tags)
 		t = tags[i]
 		ioe = convert(Int, floor((t - 1) / 4)) + 1
 		bi =  (t - 1) % 4 + 1
-		t != tagset.O && bpos == 0 && (bpos = i)
-		if t == tagset.E
+		ioe != tagset.O && bpos == 0 && (bpos = i)
+		if ioe == tagset.E
 			push!(ranges, bpos:i)
 			bpos = 0
+			lpos += 1
+			(bi % 2) == 1 && push!(luwBpos, lpos)
 		end
 	end
-	ranges
+	push!(luwBpos, length(ranges) + 1)
+	for i = 2:length(luwBpos)
+		push!(luwRanges, luwBpos[i-1]:(luwBpos[i] - 1))
+	end
+	ranges, luwRanges
 end
 
 #function encode(tagset::BI, ranges::Vector{UnitRange{Int}}, length::Int)
