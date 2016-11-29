@@ -69,8 +69,8 @@ function decode(tagset::BI, tags::Vector{Int})
 		t = tags[i]
 		ioe = convert(Int, floor((t - 1) / 4)) + 1
 		bi =  (t - 1) % 4 + 1
-		ioe != tagset.O && bpos == 0 && (bpos = i)
-		if ioe == tagset.E
+		ioe != tagIOE.O && bpos == 0 && (bpos = i)
+		if ioe == tagIOE.E
 			push!(ranges, bpos:i)
 			bpos = 0
 			lpos += 1
