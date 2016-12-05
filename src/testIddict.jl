@@ -48,7 +48,8 @@ function Base.push!(d::IdDict, key)
 end
 
 function h5convert{T}(f::IdDict{T})
-    h5dict(IdDict{T}, "key2id"=>f.key2id,
+    h5dict(IdDict{T}, 
+           #"key2id"=>f.key2id,
            "id2key"=>f.id2key,
            "id2count"=>f.id2count)
 end
@@ -56,7 +57,7 @@ end
 function h5loadId!(data)
     iddict = IdDict()
     iddict.id2count = data["id2count"]
-    iddict.key2id = data["key2id"]
+    # iddict.key2id = data["key2id"]
 	id2key = data["id2key"]
 	buff = String[]
 	if typeof(id2key) == Dict{String,Any}

@@ -22,6 +22,7 @@ function doTest(trainData, validData, prefix::String, nepoch::Int, emboutCh::Int
     close(outf)
 
     h5save(string("./model/",prefix,"/tokenizer_result.h5"),t)
+    t
 end
 
 function accuracy(gold, test)
@@ -44,9 +45,9 @@ jpnValidDoc = readCorpus("./corpus/jpnValidDoc.h5")
 println("Valid data:\t($(length(jpnValidDoc)))")
 #println("Test data:\t($(length(jpnTestDoc)))")
 
-prefix = "20161118/pattern1"
-nepoch = 10
-embCh = 32
+prefix = "20161205/test"
+nepoch = 100
+embCh = 64
 
 #doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
-doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
+t = doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
