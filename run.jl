@@ -44,17 +44,17 @@ println("Train data:\t($(length(jpnTrainDoc)))")
 println("Valid data:\t($(length(jpnValidDoc)))")
 #println("Test data:\t($(length(jpnTestDoc)))")
 
-nepoch = 500
-embCh = 32
+nepoch = 1000
+embCh = 64
 
-prefix = "20161124/pattern1"
-doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 3)
+prefix = "20161130/pattern1"
+doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 9)
 
-prefix = "20161124/pattern2"
-doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 5)
+prefix = "20161130/pattern2"
+doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 11)
 
-prefix = "20161124/pattern3"
-doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
+prefix = "20161130/pattern3"
+doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 13)
 
-prefix = "20161124/pattern4"
-doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 9)
+prefix = "20161130/pattern4"
+doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 15)

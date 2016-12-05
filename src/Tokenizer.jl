@@ -14,7 +14,7 @@ function Tokenizer(prefix::String = "";emboutCh=32,convFilterWidth=3)
 #  convFilterWidth = 9
   convOutCh = 128
   convPadWidth = Int((convFilterWidth - 1)/2)
-  lsOutCh = 32
+  lsOutCh = emboutCh
   lsOutCh2 = 12
   embed = Embedding(T, 10000, emboutCh)
   conv = Conv(T, (emboutCh,convFilterWidth),(1,convOutCh),paddims=(0,convPadWidth))
@@ -24,7 +24,6 @@ function Tokenizer(prefix::String = "";emboutCh=32,convFilterWidth=3)
     chars = identity(:chars)
     x = Var(reshape(chars, 1, length(chars)))
     x = embed(x)
-#	x = dropout(x, 0.25, true)
     x = conv(x)
     x = reshape(x, size(x, 2), size(x, 3))
     x = transpose(x)

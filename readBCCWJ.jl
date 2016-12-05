@@ -39,7 +39,7 @@ for (ioe, bi) in zip(doc, docLuw)
 	push!(docCombine, v)
 end
 
-function doTest(trainData, validData, prefix::String, nepoch::Int, emboutCh::Int, convFilterWidth::Int;learningRate=0.00001, dynamicRate::Bool=false)
+function doTest(trainData, validData, prefix::String, nepoch::Int, emboutCh::Int, convFilterWidth::Int;learningRate=0.0001, dynamicRate::Bool=false)
 
     success(`mkdir -p ./data/$(prefix)`)
     success(`mkdir -p ./model/$(prefix)`)
@@ -60,7 +60,7 @@ end
 nepoch = 2000
 embCh = 32
 
-prefix = "20161122/test2"
+prefix = "20161124/test"
 doTest(docCombine, docCombine, prefix, nepoch, embCh, 9)
 
 #numOfData = length(docCombine)
