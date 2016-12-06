@@ -10,9 +10,9 @@ function encode(t::Tokenizer, doc::Vector)
 	for sent in doc
 		wordVector = Int[]
 		tagVector = Int[]
-		for (word, ioe, bi) in sent
+		for (word, tag) in sent
 			push!(wordVector, push!(t.dict, string(word)))
-			push!(tagVector,biTag[bi])
+			push!(tagVector,biTag[tag])
 		end
 		push!(words, wordVector)
 		push!(tags, tagVector)
