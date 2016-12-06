@@ -54,7 +54,7 @@ function decode(tagset::BI, tags::Vector{Int})
   ranges = UnitRange{Int}[]
   for i = 1:length(tags)
     t = tags[i]
-    t != tagset.O && bpos == 0 && (bpos = i)
+    t != tagset.B && bpos == 0 && (bpos = i)
     if t == tagset.E
       push!(ranges, bpos:i)
       bpos = 0

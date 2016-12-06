@@ -207,7 +207,10 @@ function flattenLUW!{T<:AbstractXMLNode}(r::T, v::Vector, luwPos::String)
         end
     else
         #text = getText(r)
-        text = getAttribute(r, "lemma")
+		lemma = getAttribute(r, "lemma")
+		nm = name(r)
+        text = (lemma == "") ? nm : lemma
+		#getAttribute(r, "lemma") 
 		pos = getAttribute(r, "pos")
 		atr = (luwPos == pos ? "a" : "")
         push!(v, [text, atr])

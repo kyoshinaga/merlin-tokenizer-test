@@ -110,10 +110,10 @@ function sizeVar(x:: Var, dim:: Int)
   size(x.data, dim)
 end
 
-function (t::Tokenizer)(chars::Vector{Char})
+function (t::Tokenizer)(words::Array{String})
   unk = t.dict["UNKNOWN"]
-  x = map(chars) do c
-    get(t.dict, string(c), unk)
+  x = map(words) do c
+    get(t.dict, c, unk)
   end
   y = t.model(x).data
   tags = argmax(y, 1)
