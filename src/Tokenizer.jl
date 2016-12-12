@@ -66,48 +66,48 @@ function Tokenizer(prefix::String = "";emboutCh=32,convFilterWidth=3)
   Tokenizer(prefix, dict, BI(), g)
 end
 
-function TokenizerAutoEncode()
-  dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
-  T = Float32
-  embed = Embedding(T, 100000, 10)
-  conv = Conv(T, (10,9),(1,100),paddims=(0,4))
-  ls = [Linear(T, 100, 4),Linear(T, 4, 100000)]
-  g = @graph begin
-    chars = identity(:chars)
-    x = Var(reshape(chars, 1, length(chars)))
-    x = embed(x)
-    x = conv(x)
-    x = reshape(x, size(x, 2), size(x, 3))
-    x = transpose(x)
-    x = relu(x)
-    x = ls[1](x)
-    x = ls[2](x)
-    x
-  end
-  Tokenizer(dict, IOE(), g)
-end
-
-function TokenizerCuda()
-  dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
-  T = Float32
-  embed = Embedding(T, 100000, 10)
-  conv = Conv(T, (10,9),(1,100),paddims=(0,4))
-  ls = Linear(T, 100, 4)
-  g = @graph begin
-    chars = identity(:chars)
-    x = Var(reshape(chars, 1, length(chars)))
-    x = embed(x)
-    x = conv(x)
-    x = reshape(x, size(x, 2), size(x, 3))
-    x = transpose(x)
-    x = VarToCuArray(x)
-    x = relu(x)
-    x = ls(x)
-    x = CuArrayToVar(x)
-    x
-  end
-  Tokenizer(dict, IOE(), g)
-end
+#function TokenizerAutoEncode()
+#  dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
+#  T = Float32
+#  embed = Embedding(T, 100000, 10)
+#  conv = Conv(T, (10,9),(1,100),paddims=(0,4))
+#  ls = [Linear(T, 100, 4),Linear(T, 4, 100000)]
+#  g = @graph begin
+#    chars = identity(:chars)
+#    x = Var(reshape(chars, 1, length(chars)))
+#    x = embed(x)
+#    x = conv(x)
+#    x = reshape(x, size(x, 2), size(x, 3))
+#    x = transpose(x)
+#    x = relu(x)
+#    x = ls[1](x)
+#    x = ls[2](x)
+#    x
+#  end
+#  Tokenizer(dict, IOE(), g)
+#end
+#
+#function TokenizerCuda()
+#  dict = IdDict(map(String, ["UNKNOWN", " ","\n"]))
+#  T = Float32
+#  embed = Embedding(T, 100000, 10)
+#  conv = Conv(T, (10,9),(1,100),paddims=(0,4))
+#  ls = Linear(T, 100, 4)
+#  g = @graph begin
+#    chars = identity(:chars)
+#    x = Var(reshape(chars, 1, length(chars)))
+#    x = embed(x)
+#    x = conv(x)
+#    x = reshape(x, size(x, 2), size(x, 3))
+#    x = transpose(x)
+#    x = VarToCuArray(x)
+#    x = relu(x)
+#    x = ls(x)
+#    x = CuArrayToVar(x)
+#    x
+#  end
+#  Tokenizer(dict, IOE(), g)
+#end
 
 function VarToCuArray(x:: Var)
   y = x
