@@ -78,19 +78,30 @@ function h5loadTokenizer!(data::Dict,filename::String)
             end
         end
 
-        g = @graph begin
-          chars = identity(:chars)
-          x = Var(reshape(chars, 1, length(chars)))
-          x = nodeDict["embed"](x)
-          x = nodeDict["conv"](x)
-          x = reshape(x, size(x, 2), size(x, 3))
-          x = transpose(x)
-          x = relu(x)
-		  x = dropout(x, 0.5, false)
-          x = nodeDict["ls1"](x)
-          x = nodeDict["ls2"](x)
-          x
-        end
+		x = Var()
+		y = Embedding(T, 100000, emboutCh)(x)
+		y = Conv(T, (emboutCh, convFilterWidth), (1,convOutCh), paddims=(0,convOutCh))(y)
+		y = reshape(y, size(y,2), size(y,3))
+		y = transpose(y)
+		y = relu(y)
+		y = dropout(y, 0.5, true)(y)
+		y = Linear(T, convOutCh, lsOutCh)(y)
+		y = dropout(y, 0.25, true)(y)
+		y = Linear(T, lsOutCh, lsOutCh2)
+		g = compile(y, x)
+#        g = @graph begin
+#          chars = identity(:chars)
+#          x = Var(reshape(chars, 1, length(chars)))
+#          x = nodeDict["embed"](x)
+#          x = nodeDict["conv"](x)
+#          x = reshape(x, size(x, 2), size(x, 3))
+#          x = transpose(x)
+#          x = relu(x)
+#		  x = dropout(x, 0.5, false)
+#          x = nodeDict["ls1"](x)
+#          x = nodeDict["ls2"](x)
+#          x
+#        end
 
         t = Tokenizer(filename, iddict, tagset, g)
     else
