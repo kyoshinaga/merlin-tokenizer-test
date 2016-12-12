@@ -37,17 +37,17 @@ function accuracy(gold, test)
     correctTest / totalGold
 end
 
-#jpnTrainDoc = readCorpus("./corpus/jpnTrainDoc.h5")
+jpnTrainDoc = readCorpus("./corpus/jpnTrainDoc.h5")
 jpnValidDoc = readCorpus("./corpus/jpnValidDoc.h5")
 #jpnTestDoc = readCorpus( "./corpus/jpnTestDoc.h5")
 
-#println("Train data:\t($(length(jpnTrainDoc)))")
+println("Train data:\t($(length(jpnTrainDoc)))")
 println("Valid data:\t($(length(jpnValidDoc)))")
 #println("Test data:\t($(length(jpnTestDoc)))")
 
-prefix = "20161205/test"
-nepoch = 100
+prefix = "20161212/pattern1"
+nepoch = 1000
 embCh = 64
 
 #doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
-t = doTest(jpnValidDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
+t = doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 9)
