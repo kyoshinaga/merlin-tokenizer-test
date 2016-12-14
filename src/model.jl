@@ -16,7 +16,9 @@ function Model(wordembeds, charembeds, ntags::Int)
 
     w = Var() # word vector
     c = Var() # chars vector
-    y = concat(1, w, c)
+    y = wordembeds(w)
+    #y = concat(1, w, c)
+    y = concat(1, y, c)
     y = window(y, (750,), strides=(150,), pads=(300,))
     y = Linear(T,750,300)(y)
     y = relu(y)
@@ -29,13 +31,13 @@ end
 function (m::Model)(tokens::Vector{Token})
     wordvec = map(t -> t.word, tokens)
     wordvec = reshape(wordvec, 1, length(wordvec))
-    wordmat = m.wordfun(Var(wordvec))
-
+    #wordmat = m.wordfun(Var(wordvec))
     charvecs = map(tokens) do t
         #Var(zeros(Float32,50,1))
         charvec = reshape(t.chars, 1, length(t.chars))
         m.charfun(Var(charvec))
     end
     charmat = concat(2, charvecs)
-    m.sentfun(wordmat, charmat)
+    #m.sentfun(wordmat, charmat)
+    m.sentfun(Var(wordvec), charmat)
 end
