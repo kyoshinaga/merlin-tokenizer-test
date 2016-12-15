@@ -63,5 +63,3 @@ function Base.push!(d::IntDict, key)
 end
 
 Base.append!(d::IntDict, keys::Vector) = map(k -> push!(d,k), keys)
-
-# h5convert(x::IntDict{T}) = Dict(name => )
