@@ -76,7 +76,7 @@ function encode(data::Vector, wordict, chardict, tagdict, append::Bool)
 			chars = Vector{Char}(word)
 			if append
 				charids = map(c -> push!(chardict, string(c)), chars)
-			elseif
+			else
 				charids = map(c -> get(chardict, string(c), 0), chars)
 			end
 			(length(charids) == 0) && println(string("word: ", word," tag: ", tag))
@@ -89,6 +89,4 @@ function encode(data::Vector, wordict, chardict, tagdict, append::Bool)
 	data_x, data_y
 end
 
-function h5convert(x::Tagger)
-end
 #function (t::Tagger)()
