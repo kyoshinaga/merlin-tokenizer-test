@@ -8,9 +8,9 @@ export train, Tagger
 
 abstract Functor
 
+inlcude("token.jl")
 include("intdict.jl")
 include("model.jl")
-inlcude("token.jl")
 include("tagger.jl")
 inlcude("train.jl")
 
