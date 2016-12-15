@@ -5,6 +5,7 @@ using Merlin
 using HDF5
 
 export train, Tagger
+export IntDict
 
 abstract Functor
 

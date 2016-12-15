@@ -54,6 +54,7 @@ function readCorpus(path::String)
 			if(length(token[1]) > 0)
 				push!(sent, token)
 				push!(word, token[1])
+            end
 			endend
 		end
 		(length(sent) > 0) && (push!(doc, sent))

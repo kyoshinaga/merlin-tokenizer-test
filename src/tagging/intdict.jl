@@ -1,4 +1,4 @@
-export IdDict, h5convert
+export IntDict, h5convert
 """
     IntDict{T}
 
