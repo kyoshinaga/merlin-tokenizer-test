@@ -51,11 +51,10 @@ function readCorpus(path::String)
 		delete!(s, "#TYPE")
 		for j = 1:length(s)
 			token = s[string(j)]
-			if(length(token[1]) > 0)
+			if (length(token[1]) > 0)
 				push!(sent, token)
 				push!(word, token[1])
             end
-			endend
 		end
 		(length(sent) > 0) && (push!(doc, sent))
 	end
