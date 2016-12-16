@@ -4,6 +4,8 @@ importall ..bioTagging
 using Merlin
 using HDF5
 
+import Merlin:save
+
 export train, Tagger
 export IntDict
 

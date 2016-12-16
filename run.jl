@@ -1,53 +1,72 @@
-include("./src/testJukaiNLP.jl")
-using testJukaiNLP
+include("./src/bioTagging.jl")
+using bioTagging.tagging
 
 using Merlin
 using CPUTime
 
-import Merlin: h5save, h5writedict, h5dict, h5convert
+import Merlin:save
 
-function doTest(trainData, validData, prefix::String, nepoch::Int, emboutCh::Int, convFilterWidth::Int;learningRate=0.00001, dynamicRate::Bool=false)
+function doTest(trainData, validData, prefix::String, nepoch::Int,wordEmbCh, wordWindow, charEmbCh, charWindow)
 
     success(`mkdir -p ./data/$(prefix)`)
     success(`mkdir -p ./model/$(prefix)`)
 
-    t = Tokenizer(prefix,emboutCh=emboutCh,convFilterWidth=convFilterWidth)
+    t, train_x, train_y, valid_x, valid_y = Tagger(trainData, validData, prefix=prefix, 
+                                                   wordEmbDim=wordEmbCh, wordWindow=wordWindow, 
+                                                   charEmbDim=charEmbCh, charWindow=charWindow)
 
     beginTime = time()
-    @time @CPUtime train(t, nepoch, trainData, validData, learningRate=learningRate,dynamicRate=dynamicRate)
+    @time @CPUtime train(t, nepoch, train_x, train_y, valid_x, valid_y)
     endTime = time()
 
     outf = open("./data/$(prefix)/computeTime.txt","w")
     write(outf,"time:\t$(endTime - beginTime)")
     close(outf)
 
-    h5save(string("./model/",prefix,"/tokenizer_result.h5"),t)
+    save(string("./model/",prefix,"/tagger_result.h5"),"w","Merlin", t)
     t
 end
 
-function accuracy(gold, test)
-    totalGold = 0
-    correctTest = 0
-    for i = 1:length(gold)
-        for j = 1:length(gold[i])
-            gold[i][j] == test[i][j] && (correctTest += 1)
-            totalGold += 1
-        end
-    end
-    correctTest / totalGold
-end
 
-jpnTrainDoc = readCorpus("./corpus/jpnTrainDoc.h5")
-jpnValidDoc = readCorpus("./corpus/jpnValidDoc.h5")
-#jpnTestDoc = readCorpus( "./corpus/jpnTestDoc.h5")
+jpnTrainDoc = "./corpus/jpnTrainDoc.h5"
+jpnValidDoc = "./corpus/jpnValidDoc.h5"
+#jpnTrainDoc = "./corpus/sampleDoc.h5"
+#jpnValidDoc = "./corpus/sampleDoc.h5"
 
-println("Train data:\t($(length(jpnTrainDoc)))")
-println("Valid data:\t($(length(jpnValidDoc)))")
-#println("Test data:\t($(length(jpnTestDoc)))")
+nepoch = 100
 
-prefix = "20161212/pattern1"
-nepoch = 1000
-embCh = 64
+# pattern1
+prefix = "20161216/pattern1"
+wordEmbCh = 64
+wordWindow = 3
+charEmbCh = 12
+charWindow = 5
 
-#doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 7)
-t = doTest(jpnTrainDoc,jpnValidDoc,prefix, nepoch, embCh, 9)
+t = doTest(jpnTrainDoc,jpnValidDoc, prefix, nepoch, wordEmbCh, wordWindow, charEmbCh, charWindow)
+
+# pattern2
+prefix = "20161216/pattern2"
+wordEmbCh = 64
+wordWindow = 5
+charEmbCh = 12
+charWindow = 5
+
+t = doTest(jpnTrainDoc,jpnValidDoc, prefix, nepoch, wordEmbCh, wordWindow, charEmbCh, charWindow)
+
+# pattern3
+prefix = "20161216/pattern3"
+wordEmbCh = 64
+wordWindow = 7
+charEmbCh = 12
+charWindow = 5
+
+t = doTest(jpnTrainDoc,jpnValidDoc, prefix, nepoch, wordEmbCh, wordWindow, charEmbCh, charWindow)
+
+# pattern4
+prefix = "20161216/pattern4"
+wordEmbCh = 64
+wordWindow = 9
+charEmbCh = 12
+charWindow = 5
+
+t = doTest(jpnTrainDoc,jpnValidDoc, prefix, nepoch, wordEmbCh, wordWindow, charEmbCh, charWindow)

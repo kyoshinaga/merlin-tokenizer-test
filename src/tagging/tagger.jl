@@ -1,10 +1,8 @@
-using HDF5
-
 export Tagger, h5convert
 
 type Tagger <: Functor
 	prefix::String
-	wordict::IntDict
+	worddict::IntDict
 	chardict::IntDict{String}
 	tagdict::IntDict{String}
 	model::Model
@@ -28,9 +26,26 @@ function Tagger(trainCorpus::String, validCorpus::String ;
 	tagdict = IntDict{String}()
 
 	train_x, train_y = encode(trainData, worddict, chardict, tagdict, true)
-	valid_x, valid_y = encode(validData, worddict, chardict, tagdict, true)
+	valid_x, valid_y = encode(validData, worddict, chardict, tagdict, false)
 
-	model = Model(wordembeds, charembeds, length(tagdict))
+    if length(prefix) > 0 
+        outNetwork = open("./data/$(prefix)/networkConstruction.txt","w")
+        write(outNetwork,"Word Embed Dimension: $(wordEmbDim)\n")
+        write(outNetwork,"Word Window: $(wordWindow)\n")
+        write(outNetwork,"Char Embed Dimension: $(charEmbDim)\n")
+        write(outNetwork,"Char Window: $(charWindow)\n")
+        close(outNetwork)
+
+        outStatus = open("./data/$(prefix)/status.txt","w")
+        write(outStatus, "Train Data: $(length(train_x))\n")
+        write(outStatus, "Valid Data: $(length(valid_x))\n")
+        write(outStatus, "words: $(length(worddict))\n")
+        write(outStatus, "chars: $(length(chardict))\n")
+        write(outStatus, "tags: $(length(tagdict))\n")
+        close(outStatus)
+    end
+
+	model = Model(wordEmbeds, charEmbeds, length(tagdict), charEmbDim, charWindow, wordEmbDim, wordWindow)
 
 	Tagger(prefix, worddict, chardict, tagdict, model), train_x, train_y, valid_x, valid_y
 end
@@ -39,7 +54,7 @@ function readCorpus(path::String)
 	dict = h5read(path, "Merlin")
 	delete!(dict, "#TYPE")
 	doc = []
-	word = []
+	word = String[]
 
 	push!(word, "UNKNOWN")
 	push!(word, " ")
@@ -61,10 +76,10 @@ function readCorpus(path::String)
 	doc, word
 end
 
-function encode(data::Vector, wordict, chardict, tagdict, append::Bool)
+function encode(data::Vector, worddict, chardict, tagdict, append::Bool)
 
 	data_x, data_y = Vector{Token}[], Vector{Int}[]
-	unkword = wordict["UNKNOWN"]
+	unkword = worddict["UNKNOWN"]
 
 	for sent in data
 		push!(data_x, Token[])
@@ -89,4 +104,4 @@ function encode(data::Vector, wordict, chardict, tagdict, append::Bool)
 	data_x, data_y
 end
 
-#function (t::Tagger)()
+Merlin.h5convert{T<:Tagger}(::Type{T}, x) = Tagger(x["prefix"],x["worddict"],x["chardict"],x["tagdict"],x["model"])

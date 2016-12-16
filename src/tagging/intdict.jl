@@ -63,3 +63,16 @@ function Base.push!(d::IntDict, key)
 end
 
 Base.append!(d::IntDict, keys::Vector) = map(k -> push!(d,k), keys)
+
+Merlin.h5convert(x::Dict{String, Int}) = x
+
+Merlin.h5convert{T<:Dict{String,Int}}(::Type{T}, x) = x
+
+function Merlin.h5convert{T<:IntDict{String}}(::Type{T}, x) 
+    dict = IntDict{String}()
+    dict.key2id = x["key2id"]
+    dict.id2key = x["id2key"]
+    dict.id2count = x["id2count"]
+    dict
+end
+

@@ -12,19 +12,20 @@ function Model(wordembeds, charembeds, ntags::Int,
 
 	# Character part
 	charWindowWidth = charWindow * charEmbDim
-	charPaddimg = Int((charWindow - 1) / 2) * charEmbDim
+	charPadding = Int((charWindow - 1) / 2) * charEmbDim
+
     x = Var()
     y = charembeds(x)
-    y = window(y, (charWinowWidth,), strides=(charEmbDim,), pads=(charPadding,))
-    y = Linear(T, charWinowWidth, charWinowWidth)(y)
+    y = window(y, (charWindowWidth,), strides=(charEmbDim,), pads=(charPadding,))
+    y = Linear(T, charWindowWidth, charWindowWidth)(y)
     y = max(y, 2)
     charfun = compile(y, x)
 
 	# Word part
-	concatWordUnit = wordEmbDim + charWinowWidth
+	concatWordUnit = wordEmbDim + charWindowWidth
 	wordWindowWidth = concatWordUnit * wordWindow
 	wordPadding = Int((wordWindow - 1) / 2) * concatWordUnit
-	
+
     w = Var() # word vector
     c = Var() # chars vector
     y = wordembeds(w)
